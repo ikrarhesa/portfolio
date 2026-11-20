@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import { useSpaceInvaders } from '../hooks/useSpaceInvaders';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../constants/spaceInvaders';
 import { gameAudio } from '../lib/gameAudio';
+import { canUseHeadControl, startHeadControl, type HeadStatus } from '../lib/headControl';
+import { prefetchFaceModel } from '../lib/faceAR';
 
 interface SpaceInvaderModalProps {
     isOpen: boolean;
@@ -10,7 +12,7 @@ interface SpaceInvaderModalProps {
 
 // The dialog (and the game hook with its keyboard listeners) only exists while open
 const GameDialog = ({ onClose }: { onClose: () => void }) => {
-    const { canvasRef, score, gameOver, highScore, isNewBest, lives, hitPulse, startGame, stopGame, setControl, gameState } = useSpaceInvaders();
+    const { canvasRef, score, gameOver, highScore, isNewBest, lives, hitPulse, startGame, stopGame, setControl, setSteer, gameState } = useSpaceInvaders();
     // Alternate between two identical animations so every hit restarts the shake
     const hitClass = hitPulse === 0 ? '' : hitPulse % 2 ? 'game-hit-a' : 'game-hit-b';
     const [sound, setSound] = useState(gameAudio.getPrefs);
@@ -23,6 +25,28 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
         setSound(gameAudio.getPrefs());
     };
     const [gameStarted, setGameStarted] = useState(false);
+
+    // Optional camera steering: desktop/tablet only, loads nothing until the visitor opts in
+    const [headSupported] = useState(canUseHeadControl);
+    const [headOn, setHeadOn] = useState(false);
+    const [headStatus, setHeadStatus] = useState<HeadStatus>('loading');
+    const videoRef = useRef<HTMLVideoElement>(null);
+    useEffect(() => {
+        if (!headOn || !videoRef.current) return;
+        const stop = startHeadControl({ video: videoRef.current, setControl, setSteer, onStatus: setHeadStatus });
+        return stop; // also switches the camera off
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- setControl only writes to a ref
+    }, [headOn]);
+    useEffect(() => {
+        if (headStatus === 'error') setHeadOn(false);
+    }, [headStatus]);
+    const headLabel: Record<HeadStatus, string> = {
+        loading: 'Warming up…',
+        calibrating: 'Look straight ahead',
+        tracking: 'Move your head',
+        lost: "Can't see you",
+        error: '',
+    };
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -83,6 +107,24 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                                 {label}
                             </button>
                         ))}
+                        {headSupported && (
+                            <button
+                                type="button"
+                                onClick={() => setHeadOn((v) => !v)}
+                                onPointerEnter={prefetchFaceModel}
+                                onFocus={prefetchFaceModel}
+                                aria-pressed={headOn}
+                                title="Steer with your head. Runs on your device, nothing is recorded."
+                                className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400 ${
+                                    headOn
+                                        ? 'border-cyan-300/50 bg-cyan-400/15 text-cyan-100'
+                                        : 'border-white/10 text-zinc-400 hover:text-zinc-200'
+                                }`}
+                            >
+                                <span aria-hidden>●</span>
+                                Camera
+                            </button>
+                        )}
                     </div>
                     <button
                         onClick={onClose}
@@ -102,13 +144,13 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                         ref={canvasRef}
                         width={CANVAS_WIDTH}
                         height={CANVAS_HEIGHT}
-                        className="w-full h-full object-contain image-pixelated"
+                        className="block image-pixelated"
                         style={{
                             imageRendering: 'pixelated',
-                            width: '600px',
-                            height: '685px',
-                            maxWidth: '90vw',
-                            maxHeight: 'min(80vh, calc(100dvh - 11rem))'
+                            aspectRatio: `${CANVAS_WIDTH} / ${CANVAS_HEIGHT}`,
+                            // As wide as the window allows (up to 1100px) without outgrowing its height
+                            width: `min(1100px, 92vw, calc((100dvh - 11rem) * ${CANVAS_WIDTH} / ${CANVAS_HEIGHT}))`,
+                            height: 'auto',
                         }}
                     />
 
@@ -121,6 +163,16 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                                 'radial-gradient(ellipse at center, transparent 55%, rgba(7,6,11,0.55)), repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,0.16) 2px 3px)',
                         }}
                     />
+
+                    {/* Camera preview: small mirrored window, only while head control is on */}
+                    {headOn && (
+                        <div className="absolute bottom-3 right-3 z-30 w-32 overflow-hidden rounded-lg border border-cyan-300/40 bg-black/70 shadow-lg">
+                            <video ref={videoRef} muted playsInline className="block h-24 w-full object-cover" style={{ transform: 'scaleX(-1)' }} />
+                            <div className="px-1.5 py-1 text-center font-mono text-[9px] uppercase tracking-wider text-cyan-100">
+                                {headLabel[headStatus]}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Hit flash */}
                     {hitPulse > 0 && <div key={hitPulse} className="hit-flash pointer-events-none absolute inset-0 z-10 rounded-lg" aria-hidden />}
@@ -135,6 +187,11 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                             >
                                 START MISSION
                             </button>
+                            {headSupported && (
+                                <div className="mt-3 text-center text-[10px] font-mono text-zinc-500">
+                                    Optional: turn on CAMERA to steer with your head.<br />Runs on your device. Nothing is recorded.
+                                </div>
+                            )}
                             <div className="mt-4 text-zinc-400 text-xs font-mono">
                                 {highScore > 0 ? `BEST: ${highScore}` : 'PRESS BUTTON TO START'}
                             </div>

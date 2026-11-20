@@ -1,5 +1,6 @@
-export const CANVAS_WIDTH = 224;
-export const CANVAS_HEIGHT = 256;
+// Landscape playfield (16:9-ish) so the game fills a wide window instead of a tall narrow box
+export const CANVAS_WIDTH = 384;
+export const CANVAS_HEIGHT = 224;
 
 // Sprites are represented as binary arrays (1 = pixel, 0 = empty)
 // Original Space Invaders sprites
@@ -105,13 +106,13 @@ export const SPRITES = {
 export const GAME_CONFIG = {
     ALIEN_ROWS: 5,
     ALIEN_COLS: 11,
-    ALIEN_START_X: 16, // Adjusted to center with new spacing
+    ALIEN_START_X: Math.round((CANVAS_WIDTH - (11 - 1) * 18 - 12) / 2), // centres the 11-column fleet
     ALIEN_START_Y: 40,
     ALIEN_SPACING_X: 18, // Increased from 14 to 18 for wider gaps
     ALIEN_SPACING_Y: 14,
-    PLAYER_SPEED: 1.5, // Reduced from 2
+    PLAYER_SPEED: 2, // a wider field needs a quicker ship
     BULLET_SPEED: 3, // Reduced from 4
     ALIEN_DROP_DISTANCE: 6, // Reduced from 8
-    TOTAL_WIDTH: 224,
-    TOTAL_HEIGHT: 256,
+    TOTAL_WIDTH: CANVAS_WIDTH,
+    TOTAL_HEIGHT: CANVAS_HEIGHT,
 };

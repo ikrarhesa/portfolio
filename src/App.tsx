@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ShellLayout from "./components/ShellLayout";
 import IntroLoader from "./components/IntroLoader";
+import SiteFooter from "./components/SiteFooter";
 import SpaceInvaderModal from "./components/SpaceInvaderModal";
 import { CONTACT } from "./constants/contact";
 import { MISSIONS } from "./constants/missions";
@@ -26,9 +27,8 @@ function shouldPlayIntro() {
   }
 }
 
-const PROOF = [
-  { to: 34, suffix: "K", label: "weekly uses of Malaysia video templates, up from 200" },
-  { to: 24, suffix: "%", label: "Shopee Video Indonesia usage uplift, Q1–Q2 2024" },
+const PROOF: { from?: number; to: number; prefix?: string; suffix: string; label: string }[] = [
+  { from: 30, to: 500, prefix: "~", suffix: "", label: "videos a week using AR effects in Malaysia after the library refresh, up from ~30" },
   { to: 5, suffix: "", label: "markets using the AI-generated content library I designed" },
   { to: 6, suffix: "+", label: "years across design, motion and digital marketing" },
 ];
@@ -139,8 +139,8 @@ function App() {
                 I design video, AR and marketplace products that <span className="shimmer-text">scale.</span>
               </h1>
               <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-zinc-300" style={delay(260)}>
-                I turn messy product problems into measurable experiences. At Shopee, I helped grow Malaysia's video
-                templates from 200 to 34K uses a week.
+                I turn messy product problems into measurable experiences. At Shopee Video, I designed AR effects and took
+                Malaysia from about 30 to about 500 videos a week using them.
               </p>
               <div className="rise mt-8 flex flex-wrap gap-3" style={delay(400)}>
                 <a
@@ -152,7 +152,7 @@ function App() {
                 </a>
                 <a
                   href="#contact"
-                  className="inline-flex items-center rounded-xl border border-white/15 px-6 py-4 text-sm font-medium text-zinc-300 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
+                  className="inline-flex items-center rounded-xl px-4 py-4 max-sm:px-0 text-sm font-medium text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white hover:decoration-fuchsia-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
                 >
                   Get in touch
                 </a>
@@ -164,11 +164,11 @@ function App() {
             </div>
           </div>
 
-          <dl className="rise grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-8 md:grid-cols-4" style={delay(560)}>
+          <dl className="rise grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-8 md:grid-cols-3" style={delay(560)}>
             {PROOF.map((p) => (
               <div key={p.label}>
                 <dt className="text-4xl font-bold tracking-tight text-zinc-50">
-                  <CountUp to={p.to} suffix={p.suffix} delay={700} />
+                  <CountUp from={p.from} to={p.to} prefix={p.prefix} suffix={p.suffix} delay={700} />
                 </dt>
                 <dd className="mt-2 text-sm leading-snug text-zinc-400">{p.label}</dd>
               </div>
@@ -264,7 +264,7 @@ function App() {
             {CONTACT.email && (
               <a
                 href={`mailto:${CONTACT.email}`}
-                className="rounded-lg bg-fuchsia-500 px-5 py-3 text-sm font-semibold text-white hover:bg-fuchsia-400"
+                className="rounded-xl bg-fuchsia-500 px-5 py-3 text-sm font-semibold text-white hover:bg-fuchsia-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
               >
                 {CONTACT.email}
               </a>
@@ -274,7 +274,7 @@ function App() {
                 href={CONTACT.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-lg border border-white/20 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-white/5"
+                className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
               >
                 LinkedIn
               </a>
@@ -283,7 +283,7 @@ function App() {
               <a
                 href={CONTACT.cv}
                 download
-                className="rounded-lg border border-white/20 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-white/5"
+                className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
               >
                 Download CV
               </a>
@@ -294,16 +294,7 @@ function App() {
           </>
         )}
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 py-8 text-sm text-zinc-500">
-          <p>© {new Date().getFullYear()} Ikrar Hesa Prasetya</p>
-          <button
-            type="button"
-            onClick={() => setIsSpaceInvaderModalOpen(true)}
-            className="font-mono text-xs text-zinc-400 hover:text-fuchsia-300 focus-visible:outline-2 focus-visible:outline-fuchsia-400 rounded"
-          >
-            ▶ Play Space Invaders
-          </button>
-        </footer>
+        <SiteFooter />
       </ShellLayout>
       )}
       {intro !== "done" && <IntroLoader onReveal={handleReveal} onDone={() => setIntro("done")} />}

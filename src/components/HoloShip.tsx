@@ -17,7 +17,7 @@ export default function HoloShip({ onClick, className = "" }: { onClick: () => v
       type="button"
       onClick={onClick}
       aria-label="Shoot the alien! Play Space Invaders"
-      className={`holo-ship group flex w-[104px] flex-col items-center opacity-80 transition-[transform,opacity] hover:scale-110 hover:opacity-100 focus-visible:opacity-100 focus-visible:scale-110 focus-visible:outline-2 focus-visible:outline-cyan-300 ${className}`}
+      className={`holo-ship group flex w-[72px] flex-col items-center opacity-50 transition-[transform,opacity] hover:scale-110 hover:opacity-100 focus-visible:opacity-100 focus-visible:scale-110 focus-visible:outline-2 focus-visible:outline-cyan-300 ${className}`}
     >
       <svg viewBox="0 0 104 112" className="holo-flicker block w-full overflow-visible" aria-hidden>
         <defs>
@@ -70,7 +70,7 @@ export default function HoloShip({ onClick, className = "" }: { onClick: () => v
       </svg>
 
       <span
-        className="mt-1 whitespace-nowrap font-mono text-[10px] font-semibold uppercase tracking-widest text-cyan-200/50 transition-colors group-hover:text-cyan-100 group-hover:[text-shadow:0_0_8px_rgba(34,211,238,0.8)] group-focus-visible:text-cyan-100 group-focus-visible:[text-shadow:0_0_8px_rgba(34,211,238,0.8)]"
+        className="mt-1 whitespace-nowrap font-mono text-[10px] font-semibold uppercase tracking-widest text-cyan-200 opacity-0 transition-[color,opacity] group-hover:opacity-100 group-focus-visible:opacity-100 group-hover:text-cyan-100 group-hover:[text-shadow:0_0_8px_rgba(34,211,238,0.8)] group-focus-visible:text-cyan-100 group-focus-visible:[text-shadow:0_0_8px_rgba(34,211,238,0.8)]"
       >
         Shoot the alien!
       </span>

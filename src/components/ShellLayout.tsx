@@ -77,7 +77,7 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
   return (
     <div className="min-h-screen text-zinc-200 relative">
       {/* Quiet backdrop: the grid stays as atmosphere, not competition for the text */}
-      <div className="fixed inset-0 z-0 opacity-[0.2] pointer-events-none" aria-hidden>
+      <div className="fixed inset-0 z-0 opacity-[0.12] pointer-events-none" aria-hidden>
         <PerspectiveGrid />
       </div>
       <div

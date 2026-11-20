@@ -136,6 +136,8 @@ export const useSpaceInvaders = () => {
 
     const requestRef = useRef<number | undefined>(undefined);
     const keysPressed = useRef<{ [key: string]: boolean }>({});
+    // Analog steering from -1 (full left) to 1 (full right), used by camera head control
+    const steerRef = useRef(0);
 
     // Initialize Game
     const initGame = useCallback(() => {
@@ -157,7 +159,7 @@ export const useSpaceInvaders = () => {
                 }
 
                 aliens.push({
-                    x: GAME_CONFIG.ALIEN_SPACING_X * col + 20,
+                    x: GAME_CONFIG.ALIEN_SPACING_X * col + GAME_CONFIG.ALIEN_START_X,
                     y: GAME_CONFIG.ALIEN_START_Y + GAME_CONFIG.ALIEN_SPACING_Y * row,
                     width: sprite[0].length,
                     height: sprite.length,
@@ -176,7 +178,7 @@ export const useSpaceInvaders = () => {
         // Bunkers (4 blocks of protection)
         const bunkers: GameObject[] = [];
         for (let i = 0; i < 4; i++) {
-            const bx = 30 + (i * 45);
+            const bx = Math.round((CANVAS_WIDTH / 4) * (i + 0.5) - 8); // spread evenly across the width
             const by = CANVAS_HEIGHT - 40;
             // Create small blocks for each bunker to simulate destruction
             for (let r = 0; r < 3; r++) {
@@ -262,6 +264,10 @@ export const useSpaceInvaders = () => {
         keysPressed.current[key] = pressed;
     };
 
+    const setSteer = (value: number) => {
+        steerRef.current = value;
+    };
+
     const handleKeyUp = (e: KeyboardEvent) => {
         keysPressed.current[e.code] = false;
     };
@@ -339,6 +345,10 @@ export const useSpaceInvaders = () => {
         if (state.gameOver || state.paused) return;
 
         // Player Movement
+        if (steerRef.current !== 0) {
+            const nextX = state.player.x + GAME_CONFIG.PLAYER_SPEED * steerRef.current;
+            state.player.x = Math.max(2, Math.min(CANVAS_WIDTH - state.player.width - 2, nextX));
+        }
         if (keysPressed.current['ArrowLeft'] && state.player.x > 2) {
             state.player.x -= GAME_CONFIG.PLAYER_SPEED;
         }
@@ -557,7 +567,7 @@ export const useSpaceInvaders = () => {
                         variant = 'OCTOPUS';
                     }
                     aliens.push({
-                        x: GAME_CONFIG.ALIEN_SPACING_X * col + 20,
+                        x: GAME_CONFIG.ALIEN_SPACING_X * col + GAME_CONFIG.ALIEN_START_X,
                         y: GAME_CONFIG.ALIEN_START_Y + GAME_CONFIG.ALIEN_SPACING_Y * row,
                         width: sprite[0].length,
                         height: sprite.length,
@@ -698,6 +708,7 @@ export const useSpaceInvaders = () => {
         startGame,
         stopGame,
         setControl,
+        setSteer,
         gameState // Expose full state for UI overlays
     };
 };
