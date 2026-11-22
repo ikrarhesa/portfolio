@@ -4,8 +4,11 @@ import { AR_FILTERS } from "../constants/arFilters";
 import Label from "./Label";
 import ProjectThumb from "./ProjectThumb";
 import FilterVideo from "./FilterVideo";
+import TanaCaseStudy from "./TanaCaseStudy";
 
 export default function ProjectPage({ mission }: { mission: Mission }) {
+  if (mission.id === "tana") return <TanaCaseStudy mission={mission} />;
+
   const index = MISSIONS.findIndex((m) => m.id === mission.id);
   const next = MISSIONS[(index + 1) % MISSIONS.length];
 

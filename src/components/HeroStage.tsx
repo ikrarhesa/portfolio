@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import HoloShip from "./HoloShip";
+
+import SoulLight from "./SoulLight";
 import { createLandmarker, openCamera, runFaceAR, type ArEvent, type TemplateId } from "../lib/faceAR";
 
 const TEMPLATES: { id: TemplateId; label: string; icon: string; hint: string }[] = [
-  { id: "cat", label: "Cutie Bear", icon: "🧸", hint: "Smile and raise your brows" },
-  { id: "wish", label: "Make a wish", icon: "🎂", hint: "Open your mouth to blow the candles" },
-  { id: "match", label: "Face Match", icon: "😜", hint: "Copy the doodle face in time" },
+  { id: "cat", label: "Cutie Bear", icon: "🧸", hint: "Smile, raise your brows" },
+  { id: "wish", label: "Make a wish", icon: "🎂", hint: "Blow out the candles" },
+  { id: "match", label: "Face Match", icon: "😜", hint: "Copy the doodle face" },
 ];
 
 // Demo head centre (120, 170)
-const HEAD = { cx: 120, cy: 170, rx: 48, ry: 62 };
+const HEAD = { cx: 120, cy: 250 };
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -82,9 +84,9 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       by += (ty - by) * 0.045;
       faceRef.current?.setAttribute(
         "transform",
-        `translate(${(fx * 24).toFixed(2)} ${(fy * 14).toFixed(2)}) rotate(${(fx * 7).toFixed(2)} ${HEAD.cx} ${HEAD.cy})`
+        `translate(${(fx * 4).toFixed(2)} ${(fy * 3).toFixed(2)}) rotate(${(fx * 2.5).toFixed(2)} ${HEAD.cx} ${HEAD.cy})`
       );
-      bracketsRef.current?.setAttribute("transform", `translate(${(bx * 24).toFixed(2)} ${(by * 14).toFixed(2)})`);
+      bracketsRef.current?.setAttribute("transform", `translate(${(bx * 4).toFixed(2)} ${(by * 3).toFixed(2)})`);
       if (phoneRef.current) {
         phoneRef.current.style.transform = `perspective(900px) rotateY(${(fx * 9).toFixed(2)}deg) rotateX(${(-fy * 6).toFixed(2)}deg)`;
       }
@@ -192,7 +194,6 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
     }
   };
 
-  const current = TEMPLATES.find((t) => t.id === template) ?? TEMPLATES[0];
   const hint =
     cam === "on"
       ? "Runs on your device. Your video never leaves this browser."
@@ -205,8 +206,9 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       ref={rootRef}
       data-paused={!inView}
       className="relative mx-auto"
-      // Width follows the viewport height (phone + controls take roughly 24rem of height plus 1.75 × width), capped for big screens
-      style={{ width: "clamp(180px, calc((100svh - 24.5rem) / 1.75), 270px)" }}
+      // Width follows the viewport height (phone + controls take roughly 24rem of height plus 2.2 × width,
+      // the screen plus its frame), capped for big screens
+      style={{ width: "clamp(180px, calc((100svh - 23rem) / 2.07), 268px)" }}
       role="group"
       aria-label="Interactive AR template demo"
       onPointerEnter={() => setHovering(true)}
@@ -216,126 +218,63 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
     >
       {/* Glow behind the phone */}
       <div
-        className="pointer-events-none absolute -inset-10 -z-10 rounded-full blur-3xl opacity-25"
+        className="dark-only pointer-events-none absolute -inset-10 -z-10 rounded-full blur-3xl opacity-25"
         style={{ background: "radial-gradient(circle, rgba(217,70,239,0.35), rgba(34,211,238,0.12) 60%, transparent 75%)" }}
         aria-hidden
       />
 
       <div className="relative">
-        <div
-          ref={phoneRef}
-          className="rounded-[2.2rem] border border-fuchsia-400/40 bg-black p-2 shadow-[0_0_60px_rgba(217,70,239,0.14)] will-change-transform"
-        >
-          <div className="relative">
-            <svg viewBox="0 0 240 420" className="block w-full rounded-[1.7rem]" aria-hidden>
-              <defs>
-                <linearGradient id="hs-bg" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#2a1238" />
-                  <stop offset="1" stopColor="#0a0610" />
-                </linearGradient>
-                <linearGradient id="hs-skin" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#5b3a78" />
-                  <stop offset="1" stopColor="#2b1a40" />
-                </linearGradient>
-                <linearGradient id="hs-ear" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#a06b48" />
-                  <stop offset="0.6" stopColor="#8a5a3b" />
-                  <stop offset="1" stopColor="#8a5a3b" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="hs-ear-in" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#f8c9cf" />
-                  <stop offset="0.6" stopColor="#ee9fae" />
-                  <stop offset="1" stopColor="#ee9fae" stopOpacity="0" />
-                </linearGradient>
-                <pattern id="hs-dots" width="16" height="16" patternUnits="userSpaceOnUse">
-                  <circle cx="1" cy="1" r="0.9" fill="#e879f9" opacity="0.2" />
-                </pattern>
-                <filter id="hs-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="3" result="b" />
-                  <feMerge>
-                    <feMergeNode in="b" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
+        {/* iPhone-style device: titanium rim, black bezel, dynamic island, side buttons */}
+        <div ref={phoneRef} className="hero-phone relative rounded-[2.1rem] p-[3px] will-change-transform"
+          style={{ background: "linear-gradient(145deg, #8b8b93 0%, #3a3a40 30%, #1c1c20 55%, #6e6e76 100%)" }}>
+          <span aria-hidden className="absolute -left-[3px] top-[17%] h-[5%] w-[3px] rounded-l bg-zinc-600" />
+          <span aria-hidden className="absolute -left-[3px] top-[26%] h-[9%] w-[3px] rounded-l bg-zinc-600" />
+          <span aria-hidden className="absolute -left-[3px] top-[37%] h-[9%] w-[3px] rounded-l bg-zinc-600" />
+          <span aria-hidden className="absolute -right-[3px] top-[30%] h-[14%] w-[3px] rounded-r bg-zinc-600" />
+          <div className="rounded-[2rem] bg-black p-[6px]">
+            <div className="relative overflow-hidden rounded-[1.7rem]">
+              <svg viewBox="0 0 240 496" className="block w-full" aria-hidden>
+                <defs>
+                  <linearGradient id="hs-bg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stopColor="#120a1c" />
+                    <stop offset="1" stopColor="#07040b" />
+                  </linearGradient>
+                  <radialGradient id="core-halo" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0" stopColor="#d946ef" stopOpacity="0.55" />
+                    <stop offset="0.45" stopColor="#a855f7" stopOpacity="0.2" />
+                    <stop offset="1" stopColor="#7c3aed" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
 
-              <rect width="240" height="420" fill="url(#hs-bg)" />
-              <rect width="240" height="420" fill="url(#hs-dots)" />
+                <rect width="240" height="496" fill="url(#hs-bg)" />
 
-              {/* Demo figure + template effects, all moving together */}
-              <g ref={faceRef}>
-                <path d="M30 420C36 306 78 248 120 248C162 248 204 306 210 420Z" fill="url(#hs-skin)" opacity="0.85" />
-                <ellipse cx={HEAD.cx} cy={HEAD.cy} rx={HEAD.rx} ry={HEAD.ry} fill="url(#hs-skin)" />
+                {/* Pulsating purple energy core. The group follows the cursor a little. */}
+                {/* Soft halo behind the 3D orb */}
+                <g ref={faceRef}>
+                  <circle className="core-anim core-halo" cx="120" cy="223" r="128" fill="url(#core-halo)" />
+                </g>
+                <text x="120" y="378" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="11" fontWeight="600" fill="#f5d0fe" fillOpacity="0.9" letterSpacing="2.5">
+                  TRY IT YOURSELF
+                </text>
+              </svg>
 
-                {template === "cat" && (
-                  <g strokeLinejoin="round" strokeLinecap="round">
-                    <g className="bob">
-                      {[-1, 1].map((side) => (
-                        <g key={side} transform={`translate(${120 + side * 42} 98) rotate(${side * 16})`}>
-                          <ellipse rx="20" ry="19" fill="url(#hs-ear)" stroke="#4e2f1e" strokeOpacity="0.7" strokeWidth="3" />
-                          <ellipse cy="2.5" rx="11.5" ry="10" fill="url(#hs-ear-in)" />
-                        </g>
-                      ))}
-                    </g>
-                    {[-1, 1].map((side) => (
-                      <ellipse key={side} cx={120 + side * 28} cy="186" rx="11" ry="7" fill="#ff7091" opacity="0.65" />
-                    ))}
-                    <ellipse cx="120" cy="172" rx="11" ry="8" fill="#6b4129" />
-                    <ellipse cx="116" cy="168.5" rx="3.4" ry="2" fill="#fff" opacity="0.85" />
-                    <path d="M98 150q7-8 14 0M128 150q7-8 14 0" fill="none" stroke="#6b4129" strokeWidth="3.5" />
-                  </g>
-                )}
+              {/* The soul-absorb light where the camera preview will appear */}
+              {cam !== "on" && (
+                <div className="pointer-events-none absolute inset-0" aria-hidden>
+                  <SoulLight paused={!inView} />
+                </div>
+              )}
 
-                {template === "wish" && (
-                  <g stroke="#141414" strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round">
-                    <clipPath id="hs-hat">
-                      <path d="M120 50L148 116H92Z" />
-                    </clipPath>
-                    <path d="M120 50L148 116H92Z" fill="#ee4266" />
-                    <g clipPath="url(#hs-hat)" stroke="none" fill="#ffd23f">
-                      <rect x="90" y="96" width="60" height="9" />
-                      <rect x="90" y="76" width="60" height="9" />
-                      <rect x="90" y="58" width="60" height="9" />
-                    </g>
-                    <path d="M120 50L148 116H92Z" fill="none" />
-                    <circle cx="120" cy="50" r="6" fill="#ffd23f" />
-                    <rect x="82" y="266" width="76" height="24" rx="5" fill="#3a86ff" />
-                    <rect x="88" y="248" width="64" height="20" rx="5" fill="#ffd23f" />
-                    {[102, 120, 138].map((x, i) => (
-                      <g key={x}>
-                        <rect x={x - 3} y="230" width="6" height="20" rx="2" fill={i % 2 ? "#2ec4b6" : "#ee4266"} strokeWidth="2.5" />
-                        <path className="blink" d={`M${x} 214c5 6 6 11 0 16c-6-5-5-10 0-16Z`} fill="#ff9f1c" strokeWidth="2.5" />
-                      </g>
-                    ))}
-                  </g>
-                )}
-
-                {template === "match" && (
-                  <g strokeLinejoin="round" strokeLinecap="round">
-                    <ellipse cx="120" cy="70" rx="48" ry="42" fill="#fffdf5" stroke="#1f2a44" strokeWidth="3" />
-                    <g className="bob">
-                      <circle cx="120" cy="64" r="21" fill="#ffe66d" stroke="#1f2a44" strokeWidth="3" />
-                      <circle cx="111" cy="59" r="2.4" fill="#1f2a44" />
-                      <circle cx="129" cy="59" r="2.4" fill="#1f2a44" />
-                      <path d="M108 68q12 14 24 0" fill="none" stroke="#1f2a44" strokeWidth="3" />
-                    </g>
-                    <path d="M92 94h56" stroke="#ff6b5b" strokeWidth="4" />
-                  </g>
-                )}
-
-              </g>
-
-              {/* Brackets follow the cursor with a slight lag */}
-              <g ref={bracketsRef} fill="none" stroke="#ffffff" strokeOpacity="0.45" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M52 108V90H70" />
-                <path d="M170 90H188V108" />
-                <path d="M52 232V250H70" />
-                <path d="M170 250H188V232" />
-              </g>
-              {/* Short-video progress bar */}
-              <rect x="18" y="396" width="204" height="3" rx="1.5" fill="#ffffff" opacity="0.2" />
-              <rect key={template} className="video-progress" x="18" y="396" width="204" height="3" rx="1.5" fill="#e879f9" />
-            </svg>
+              {/* The gem is also a button: it starts the camera */}
+              {cam !== "on" && (
+                <button
+                  type="button"
+                  onClick={toggleCamera}
+                  aria-label="Try it on your face"
+                  className="absolute left-[20%] top-[31%] h-[28%] w-[60%] rounded-full focus-visible:outline-2 focus-visible:outline-fuchsia-300"
+                />
+              )}
+              <span aria-hidden className="pointer-events-none absolute left-1/2 top-[1.7%] h-[4.2%] w-[30%] -translate-x-1/2 rounded-full bg-black" />
 
             {/* Camera mode: real video + real face landmarks drawn here */}
             <video ref={videoRef} playsInline muted className="pointer-events-none absolute h-px w-px opacity-0" />
@@ -349,12 +288,13 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
                 Starting camera and loading face tracking…
               </div>
             )}
+            </div>
           </div>
         </div>
 
         {/* Easter egg entry: a holographic projection of the game's ship */}
         {onPlayInvaders && (
-          <HoloShip onClick={onPlayInvaders} className="absolute -right-3 top-6 z-10 sm:-right-16" />
+          <HoloShip onClick={onPlayInvaders} className="absolute left-full top-6 z-10 ml-1 sm:ml-5" />
         )}
       </div>
 
@@ -375,7 +315,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
                 className={[
                   "flex flex-1 flex-col items-center gap-0.5 rounded-xl border px-1.5 py-2 transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400",
                   template === t.id
-                    ? "border-fuchsia-400/60 bg-fuchsia-500/15 text-white"
+                    ? "border-fuchsia-400/60 bg-fuchsia-500/15 text-zinc-100"
                     : "border-white/10 text-zinc-400 hover:border-white/25 hover:text-zinc-100",
                 ].join(" ")}
               >
@@ -384,19 +324,18 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
               </button>
             ))}
           </div>
-        ) : (
-          <p className="max-w-[270px] text-center font-mono text-[11px] leading-relaxed text-zinc-300" aria-live="off">
-            <span aria-hidden>{current.icon} </span>
-            {current.label} · {current.hint}
-          </p>
-        )}
+        ) : null}
 
         <button
           type="button"
           onClick={toggleCamera}
-          className="rounded text-xs text-zinc-400 underline decoration-zinc-600 decoration-dotted underline-offset-4 transition-colors hover:text-fuchsia-200 hover:decoration-fuchsia-300 focus-visible:outline-2 focus-visible:outline-fuchsia-400"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2 text-sm font-semibold text-zinc-100 transition-colors hover:border-fuchsia-300/60 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
         >
-          {cam === "loading" ? "Cancel" : cam === "on" ? "Stop camera" : "◉ Try it on your face"}
+          <svg aria-hidden viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" />
+            <circle cx="12" cy="13" r="3.5" />
+          </svg>
+          {cam === "loading" ? "Cancel" : cam === "on" ? "Stop camera" : "Try it on your face"}
         </button>
 
         {note?.kind === "wish" && (

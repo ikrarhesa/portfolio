@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 
-// Front slice is near-white cyan, back slice is electric blue: a neon depth gradient through the hologram
-const FRONT = [207, 250, 254];
-const BACK = [14, 165, 233];
+// Front slice is near-white fuchsia, back slice is deep violet: a neon depth gradient through the hologram
+const FRONT = [250, 232, 255];
+const BACK = [147, 51, 234];
 const mix = (t: number) => `rgb(${FRONT.map((f, i) => Math.round(f + (BACK[i] - f) * t)).join(",")})`;
 
 /**

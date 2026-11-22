@@ -28,7 +28,7 @@ function shouldPlayIntro() {
 }
 
 const PROOF: { from?: number; to: number; prefix?: string; suffix: string; label: string }[] = [
-  { from: 30, to: 500, prefix: "~", suffix: "", label: "videos a week using AR effects in Malaysia after the library refresh, up from ~30" },
+  { from: 30, to: 500, prefix: "~", suffix: "", label: "videos a week using AR effects in Indonesia after the library refresh, up from ~30" },
   { to: 5, suffix: "", label: "markets using the AI-generated content library I designed" },
   { to: 6, suffix: "+", label: "years across design, motion and digital marketing" },
 ];
@@ -136,11 +136,11 @@ function App() {
                 className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 md:text-6xl"
                 style={delay(120)}
               >
-                I design video, AR and marketplace products that <span className="shimmer-text">scale.</span>
+                I design AR effects people actually want to <span className="shimmer-text">use.</span>
               </h1>
               <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-zinc-300" style={delay(260)}>
-                I turn messy product problems into measurable experiences. At Shopee Video, I designed AR effects and took
-                Malaysia from about 30 to about 500 videos a week using them.
+                Product designer at Shopee Video, Jakarta. I localized an AR effects library for Indonesia and took weekly
+                videos using it from ~30 to ~500.
               </p>
               <div className="rise mt-8 flex flex-wrap gap-3" style={delay(400)}>
                 <a
@@ -179,7 +179,7 @@ function App() {
         {/* Work */}
         <section id="work" className="scroll-mt-20 py-14 md:py-20">
           <Label>Selected work</Label>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">Featured case study</h2>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">Selected case studies</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2">
             {MISSIONS.map((m, i) => (
               <MissionCard key={m.id} mission={m} featured={i === 0} />
@@ -191,7 +191,7 @@ function App() {
         <section id="about" className="scroll-mt-20 border-t border-white/10 py-14 md:py-20">
           <div className="grid items-start gap-10 md:grid-cols-[minmax(0,320px)_1fr] md:gap-14 lg:grid-cols-[minmax(0,380px)_1fr]">
             <figure className="mx-auto w-full max-w-sm md:sticky md:top-24 md:mx-0">
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b0712] shadow-[0_0_60px_rgba(217,70,239,0.12)]">
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] shadow-[0_0_60px_rgba(217,70,239,0.12)]">
                 <img
                   src="/about.jpg"
                   alt="Ikrar Hesa Prasetya standing beside an Apollo 11 poster outside the Smithsonian National Air and Space Museum"
@@ -202,7 +202,7 @@ function App() {
                 />
                 {/* Fades the bottom of the photo into the page */}
                 <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#07060b]/45 via-transparent to-transparent"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--bg)]/45 via-transparent to-transparent"
                   aria-hidden
                 />
               </div>

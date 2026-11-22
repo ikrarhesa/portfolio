@@ -46,8 +46,8 @@ export default function HoloShip({ onClick, className = "" }: { onClick: () => v
         </defs>
 
         {/* Projector pad */}
-        <ellipse cx="52" cy="92" rx="38" ry="8" fill="none" stroke="#22d3ee" strokeOpacity="0.7" strokeWidth="1.5" />
-        <ellipse cx="52" cy="92" rx="24" ry="5" fill="#22d3ee" fillOpacity="0.15" stroke="#22d3ee" strokeOpacity="0.9" strokeWidth="1" />
+        <ellipse className="holo-pad" cx="52" cy="92" rx="38" ry="8" fill="none" stroke="#22d3ee" strokeOpacity="0.7" strokeWidth="1.5" />
+        <ellipse className="holo-pad-in" cx="52" cy="92" rx="24" ry="5" fill="#22d3ee" fillOpacity="0.15" stroke="#22d3ee" strokeOpacity="0.9" strokeWidth="1" />
 
         {/* Light cone rising from the pad */}
         <polygon className="holo-beam" points="30,92 74,92 68,38 36,38" fill="url(#hl-beam)" />
@@ -58,7 +58,7 @@ export default function HoloShip({ onClick, className = "" }: { onClick: () => v
             <g className="holo-ghost" fill="#22d3ee" opacity="0.55">
               {pixels}
             </g>
-            <g fill="url(#hl-ship)" filter="url(#hl-glow)">
+            <g className="holo-body" fill="url(#hl-ship)" filter="url(#hl-glow)">
               {pixels}
             </g>
           </g>

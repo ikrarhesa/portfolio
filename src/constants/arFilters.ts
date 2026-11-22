@@ -16,7 +16,7 @@ export const AR_FILTERS: ARFilter[] = [
     id: "editable-text",
     title: "Editable-text sticker",
     blurb:
-      "A commercial sticker above the head where the seller types their own message live: “Limited Offer!!!!” here, “Penawaran Terbatas!” in Indonesian. One effect, any offer. Recorded in the live Shopee app.",
+      "A commercial sticker above the head. Pick a text sticker from the effects library, type your own message and it updates live: “Promo Spesial”, “Limited Offer!”, or anything else. One effect, any offer. Recorded in the live Shopee app.",
     tags: ["Commercial", "Editable text", "Head anchor"],
     purpose: "Commercial: sellers write their own offer",
     trigger: "Typed text, live",

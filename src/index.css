@@ -9,10 +9,24 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Theme tokens. Light is the default; dark (the neon "control deck") is opt-in via the header toggle. */
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --fg: #27272a;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #07060b;
+  --surface: #0d0814;
+  --fg: #e4e4e7;
+  color-scheme: dark;
+}
+
 body {
   font-family: var(--font-sans);
-  background: #07060b;
-  color: #e4e4e7;
+  background: var(--bg);
+  color: var(--fg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -104,21 +118,22 @@ body {
 .blink { animation: blink 1.1s steps(1) infinite; }
 
 @keyframes shimmer { to { background-position: -200% center; } }
-@keyframes glow-pulse {
-  0%, 100% { filter: drop-shadow(0 0 6px rgba(232, 121, 249, 0.45)) drop-shadow(0 0 16px rgba(34, 211, 238, 0.25)); }
-  50% { filter: drop-shadow(0 0 14px rgba(232, 121, 249, 0.9)) drop-shadow(0 0 34px rgba(34, 211, 238, 0.55)); }
-}
+/* A glint sweeps across the word once, then it rests (and replays on hover) */
+@keyframes shimmer-once { from { background-position: 0% center; } to { background-position: 100% center; } }
+@keyframes shimmer-replay { from { background-position: 0% center; } to { background-position: 100% center; } }
 .shimmer-text {
   display: inline-block;
-  /* Fuchsia and cyan with a white glint that sweeps across */
+  /* Fuchsia and cyan with a white glint */
   background-image: linear-gradient(110deg, #e879f9 0%, #22d3ee 28%, #ffffff 46%, #22d3ee 64%, #e879f9 100%);
   background-size: 250% auto;
+  background-position: 100% center;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 10px rgba(232, 121, 249, 0.6)) drop-shadow(0 0 24px rgba(34, 211, 238, 0.35));
-  animation: shimmer 3.6s linear infinite, glow-pulse 2.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(232, 121, 249, 0.4)) drop-shadow(0 0 20px rgba(34, 211, 238, 0.22));
+  animation: shimmer-once 2.4s ease-in-out 0.9s both;
 }
+.shimmer-text:hover { animation: shimmer-replay 1.6s ease-in-out both; }
 
 @keyframes scroll-dot {
   0% { transform: translateY(0); opacity: 0; }
@@ -207,7 +222,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .game-hit-a, .game-hit-b, .lives-pop, .holo-flicker, .holo-bob, .holo-beam, .holo-scan, .holo-ghost, .holo-ship:hover .holo-laser { animation: none !important; }
   .rise, .video-progress, .scroll-dot, .ring-pulse, .pixel-float, .bob, .glitch-a, .glitch-b, .blink, .shimmer-text { animation: none !important; }
-  .shimmer-text { background-position: 0 center; }
+  .shimmer-text { background-position: 100% center; }
   .scroll-dot { opacity: 1; }
 }
 
@@ -288,7 +303,7 @@ body {
 @keyframes hx-beam-pulse { 0%, 100% { opacity: 0.42; } 50% { opacity: 0.72; } }
 .hx-beam {
   clip-path: polygon(14% 100%, 86% 100%, 72% 0, 28% 0);
-  background: linear-gradient(to top, rgba(34, 211, 238, 0.55), rgba(34, 211, 238, 0));
+  background: linear-gradient(to top, rgba(217, 70, 239, 0.55), rgba(217, 70, 239, 0));
   opacity: 0;
   animation: hx-beam-in 0.6s ease-out 0.1s forwards, hx-beam-pulse 2.4s ease-in-out 0.9s infinite;
 }
@@ -301,15 +316,15 @@ body {
 }
 .hx-spark { opacity: 0; animation: hx-rise 2.4s linear infinite; }
 
-/* Neon text shimmer (the intro's cyan-only take on .shimmer-text) */
+/* Neon text shimmer (the intro's fuchsia-only take on .shimmer-text) */
 .shimmer-cyan {
   display: inline-block;
-  background-image: linear-gradient(110deg, #38bdf8 0%, #67e8f9 30%, #ffffff 48%, #67e8f9 66%, #38bdf8 100%);
+  background-image: linear-gradient(110deg, #c026d3 0%, #e879f9 30%, #ffffff 48%, #e879f9 66%, #c026d3 100%);
   background-size: 250% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.65));
+  filter: drop-shadow(0 0 10px rgba(217, 70, 239, 0.65));
   animation: shimmer 3.6s linear infinite;
 }
 
@@ -350,4 +365,244 @@ body {
 [data-paused="true"],
 [data-paused="true"] * {
   animation-play-state: paused !important;
+}
+
+/* ---------- Case study cards: lift toward the viewer, tilt with the pointer, holographic sheen ---------- */
+.tilt-scene {
+  perspective: 1100px;
+}
+.tilt-card {
+  --rx: 0deg;
+  --ry: 0deg;
+  --gx: 50%;
+  --gy: 50%;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(0);
+  box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.8);
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+  will-change: transform;
+}
+.tilt-layer-thumb,
+.tilt-layer-text {
+  transform: translateZ(0);
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+}
+.tilt-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  border-radius: 1rem;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.35s ease;
+  background:
+    radial-gradient(520px circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.16), transparent 45%),
+    linear-gradient(115deg, rgba(34, 211, 238, 0) 20%, rgba(217, 70, 239, 0.16) 45%, rgba(34, 211, 238, 0.14) 60%, rgba(34, 211, 238, 0) 80%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 3px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tilt-scene:hover .tilt-card,
+  .tilt-card:focus-within {
+    transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(60px);
+    border-color: rgba(232, 121, 249, 0.5);
+    box-shadow:
+      0 50px 80px -30px rgba(0, 0, 0, 0.9),
+      0 24px 60px -24px rgba(217, 70, 239, 0.5),
+      0 0 0 1px rgba(232, 121, 249, 0.3);
+    /* Follow the pointer quickly, but ease in and out of the hover */
+    transition: transform 0.12s ease-out, box-shadow 0.4s ease, border-color 0.3s ease;
+  }
+  .tilt-scene:hover .tilt-layer-thumb,
+  .tilt-card:focus-within .tilt-layer-thumb {
+    transform: translateZ(32px);
+    box-shadow: 0 24px 40px -16px rgba(0, 0, 0, 0.7);
+  }
+  .tilt-scene:hover .tilt-layer-text,
+  .tilt-card:focus-within .tilt-layer-text {
+    transform: translateZ(18px);
+  }
+  .tilt-scene:hover .tilt-sheen,
+  .tilt-card:focus-within .tilt-sheen {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt-card, .tilt-layer-thumb, .tilt-layer-text { transform: none !important; transition: none; }
+  .tilt-sheen { display: none; }
+}
+
+
+/* ---------- Light theme ----------
+   The components are written against the dark palette. Instead of duplicating every class, the light theme
+   remaps the palette tokens Tailwind reads, then patches the few white/black overlay utilities. */
+:root:not([data-theme="dark"]) {
+  --color-zinc-50: #18181b;
+  --color-zinc-100: #18181b;
+  --color-zinc-200: #27272a;
+  --color-zinc-300: #3f3f46;
+  --color-zinc-400: #52525b;
+  --color-zinc-500: #71717a;
+  --color-zinc-600: #a1a1aa;
+  --color-fuchsia-100: #701a75;
+  --color-fuchsia-200: #86198f;
+  --color-fuchsia-300: #a21caf;
+  --color-fuchsia-400: #c026d3;
+  --color-cyan-100: #155e75;
+  --color-cyan-200: #0e7490;
+  --color-cyan-300: #0e7490;
+  --color-emerald-300: #047857;
+  --color-amber-300: #b45309;
+}
+:root:not([data-theme="dark"]) .border-white\/10,
+:root:not([data-theme="dark"]) .border-white\/15,
+:root:not([data-theme="dark"]) .border-white\/20 { border-color: rgba(24, 24, 27, 0.12); }
+:root:not([data-theme="dark"]) .bg-white\/5,
+:root:not([data-theme="dark"]) .hover\:bg-white\/5:hover { background-color: rgba(24, 24, 27, 0.04); }
+:root:not([data-theme="dark"]) .bg-white\/10 { background-color: rgba(24, 24, 27, 0.07); }
+:root:not([data-theme="dark"]) .bg-white\/\[0\.03\],
+:root:not([data-theme="dark"]) .bg-white\/\[0\.04\] { background-color: #ffffff; box-shadow: 0 1px 2px rgba(24, 24, 27, 0.05); }
+:root:not([data-theme="dark"]) .bg-white\/\[0\.06\] { background-color: rgba(24, 24, 27, 0.06); }
+:root:not([data-theme="dark"]) .hover\:text-white:hover { color: #18181b; }
+:root:not([data-theme="dark"]) .decoration-zinc-600 { text-decoration-color: #d4d4d8; }
+
+/* Dark-only atmosphere: the perspective grid and glows */
+:root:not([data-theme="dark"]) .dark-only { display: none; }
+
+/* Headline gradient: the white glint vanishes on a light page, so use a deeper, solid-ish ramp and no glow */
+:root:not([data-theme="dark"]) .shimmer-text {
+  background-image: linear-gradient(110deg, #a21caf 0%, #0e7490 28%, #c026d3 46%, #0e7490 64%, #a21caf 100%);
+  filter: none;
+}
+
+/* Light theme: primary buttons go quiet (solid ink, no glow); fuchsia stays as a small accent elsewhere */
+:root:not([data-theme="dark"]) a.bg-fuchsia-500.text-white:not(.fixed *),
+:root:not([data-theme="dark"]) button.bg-fuchsia-500.text-white:not(.fixed *) {
+  background-color: #18181b;
+  box-shadow: none;
+}
+:root:not([data-theme="dark"]) a.bg-fuchsia-500.text-white:not(.fixed *):hover,
+:root:not([data-theme="dark"]) button.bg-fuchsia-500.text-white:not(.fixed *):hover,
+:root:not([data-theme="dark"]) a.hover\:bg-fuchsia-400.text-white:hover { background-color: #3f3f46; }
+
+:root:not([data-theme="dark"]) .bg-white.text-black { background-color: #18181b; color: #fff; }
+:root:not([data-theme="dark"]) .bg-white.text-black:hover { background-color: #3f3f46; }
+
+/* Light theme: the hero phone and the invader ship share one quiet look (solid ink, soft shadow, one fuchsia accent) */
+:root:not([data-theme="dark"]) .holo-ship:not(:hover):not(:focus-visible) { opacity: 0.85; }
+:root:not([data-theme="dark"]) .holo-ship .holo-beam,
+:root:not([data-theme="dark"]) .holo-ship .holo-ghost,
+:root:not([data-theme="dark"]) .holo-ship .holo-scan { display: none; }
+:root:not([data-theme="dark"]) .holo-ship [mask] { mask: none; }
+:root:not([data-theme="dark"]) .holo-ship .holo-body { fill: #18181b; filter: none; }
+:root:not([data-theme="dark"]) .holo-ship .holo-pad { stroke: #a1a1aa; stroke-opacity: 1; }
+:root:not([data-theme="dark"]) .holo-ship .holo-pad-in { stroke: #71717a; stroke-opacity: 1; fill: #e4e4e7; fill-opacity: 1; }
+:root:not([data-theme="dark"]) .holo-ship .holo-laser { fill: #c026d3; filter: none; }
+:root:not([data-theme="dark"]) .holo-ship span { color: #52525b; text-shadow: none !important; }
+
+/* Hero phone: soft shadow (light) / violet glow (dark) */
+.hero-phone { box-shadow: 0 0 60px rgba(217, 70, 239, 0.16); }
+:root:not([data-theme="dark"]) .hero-phone { box-shadow: 0 28px 55px -24px rgba(24, 24, 27, 0.5); }
+
+/* Pulsating energy core inside the phone */
+@keyframes core-halo { 0%, 100% { opacity: 0.55; transform: scale(0.92); } 50% { opacity: 1; transform: scale(1.06); } }
+.core-anim { transform-box: fill-box; transform-origin: center; }
+.core-halo { animation: core-halo 3.2s ease-in-out infinite; }
+[data-paused="true"] .core-anim { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .core-anim { animation: none !important; } }
+
+
+
+
+
+
+
+
+
+/* Light theme: the case-study cards are defined by their border, not by a drop shadow.
+   The shadows below them came from the dark design, where a near-black shadow at 0.8 alpha reads
+   as depth. On an off-white page the same shadow just looks muddy, so the hover lift is carried by
+   the border and a 1px ring instead. */
+:root:not([data-theme="dark"]) .tilt-card { box-shadow: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  :root:not([data-theme="dark"]) .tilt-scene:hover .tilt-card,
+  :root:not([data-theme="dark"]) .tilt-card:focus-within {
+    border-color: rgba(192, 38, 211, 0.5);
+    box-shadow: 0 0 0 1px rgba(192, 38, 211, 0.16);
+  }
+  :root:not([data-theme="dark"]) .tilt-scene:hover .tilt-layer-thumb,
+  :root:not([data-theme="dark"]) .tilt-card:focus-within .tilt-layer-thumb {
+    box-shadow: none;
+  }
+}
+
+/* ---------- "Bored?" nudge ----------
+   A comic speech bubble under the theme toggle. Light mode only, so it can assume a pale page. */
+.theme-nudge {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 10px 14px 9px;
+  border: 2px solid #18181b;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #18181b;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  /* Hard offset instead of a soft shadow: comic panels are inked, not lit */
+  box-shadow: 3px 3px 0 #18181b;
+  transform: rotate(-3deg);
+  transform-origin: top right;
+  animation: theme-nudge-pop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.theme-nudge:hover { background: #fdf4ff; }
+.theme-nudge:focus-visible { outline: 2px solid #c026d3; outline-offset: 3px; }
+
+/* The tail, pointing back up at the toggle: a square rotated 45 degrees, with two borders showing */
+.theme-nudge::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 16px;
+  width: 11px;
+  height: 11px;
+  background: #ffffff;
+  border-left: 2px solid #18181b;
+  border-top: 2px solid #18181b;
+  transform: rotate(45deg);
+}
+.theme-nudge:hover::after { background: #fdf4ff; }
+
+.theme-nudge-big {
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.theme-nudge-small {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a21caf;
+}
+
+@keyframes theme-nudge-pop {
+  from { opacity: 0; transform: rotate(-10deg) scale(0.6); }
+  to { opacity: 1; transform: rotate(-3deg) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-nudge { animation: none; }
 }

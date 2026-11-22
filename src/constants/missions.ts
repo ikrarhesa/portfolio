@@ -1,4 +1,4 @@
-export type MissionId = "video-ar";
+export type MissionId = "video-ar" | "tana";
 
 /** A visual that sits beside a story section */
 export type StoryVisual =
@@ -33,9 +33,9 @@ export const MISSIONS: {
     {
       id: "video-ar",
       label: "Mission 01",
-      title: "Large-scale AR Effects for Shopee Video",
+      title: "~16× more videos using AR effects: localizing Shopee Video for Indonesia",
       summary:
-        "Designing and running AR effects for Shopee Video: replacing a library built for another market with one made for local users, and giving sellers commercial effects they can edit.",
+        "Replaced an effects library built for another market with one made for Indonesian users, refreshed it every week, and gave sellers commercial effects with text they can edit.",
       role: "Product designer · SDK",
       focus: "Localization, content library, commercial tools",
       surface: "AR effects · Shopee Video",
@@ -67,13 +67,13 @@ export const MISSIONS: {
         },
         {
           title: "The problem",
-          body: ["The library was not localized, and in Malaysia few people used it."],
-          visual: { type: "stat", value: "~30", label: "videos a week using an effect in Malaysia (approximate)" },
+          body: ["The library was not localized, and in Indonesia few people used it."],
+          visual: { type: "stat", value: "~30", label: "videos a week using an effect in Indonesia (approximate)" },
         },
         {
           title: "The constraints",
           body: [
-            "There were four designers, one per region, and I owned Malaysia. The team was small and had to decide and ship fast.",
+            "There were four designers, one per region, and I owned Malaysia. My designs shipped to every market, but each regional designer set their own strategy, such as how often to refresh the library and where to place effects. The team was small and had to decide and ship fast.",
             "The Malaysia side changed often and never had one fixed owner. Before each planning round I had to find out who was responsible, bring them together and agree the plan again. The constraint was not engineering capacity. It was people and time.",
           ],
           visual: {
@@ -86,7 +86,7 @@ export const MISSIONS: {
         {
           title: "1. Make it local",
           body: [
-            "The earlier library leaned on sparkly, kawaii looks and dense beauty filters. I replaced it with effects made for local users, starting with everyday use, and with copy in their own language.",
+            "The earlier library leaned on sparkly, kawaii looks and dense beauty filters. I replaced it with effects made for local users, starting with stickers for Indonesia: everyday use first, with copy in their own language.",
           ],
           visual: {
             type: "image",
@@ -98,7 +98,7 @@ export const MISSIONS: {
         {
           title: "2. Refresh every week",
           body: [
-            "Use of an effect is specific and tied to a moment, so one launch fades fast. I agreed a weekly refresh with the Malaysia regional team, so users always had something new to try.",
+            "Use of an effect is specific and tied to a moment, so one launch fades fast. The library was refreshed every week, so users always had something new to try. Regions set their own cadence, and Indonesia ran weekly.",
           ],
           visual: {
             type: "image",
@@ -120,23 +120,35 @@ export const MISSIONS: {
             caption: "The seller types the offer and the sticker updates live.",
           },
         },
+        {
+          title: "4. Templates in Malaysia",
+          body: [
+            "Stickers and templates are different kinds of visual, but both sit under the same SDK, and my designs shipped to every market. As the designer for Malaysia, my regional focus was templates rather than stickers.",
+            "Weekly uses of Malaysia video templates grew from about 200 to about 34K.",
+          ],
+          visual: { type: "stat", value: "~200 → ~34K", label: "weekly uses of Malaysia video templates (approximate)" },
+        },
       ],
       results: [
         {
           value: "~30 → ~500",
-          label: "videos a week using AR effects in Malaysia, before and after the library refresh (approximate)",
+          label: "videos a week using AR effects in Indonesia, before and after the library refresh (approximate)",
         },
         {
           value: "~16×",
           label: "growth in weekly videos using effects (500 ÷ 30, worked out from the approximate figures)",
         },
+        {
+          value: "~200 → ~34K",
+          label: "weekly uses of Malaysia video templates, the region I owned (approximate)",
+        },
       ],
       resultsNote: [
         "These numbers are approximate. Effects are smaller than templates, because each one is used for something specific and for a short time. A new effect usually got only about 5 to 6 uses in its first two months. Across a library that is refreshed every week, those add up to hundreds of videos a week.",
-        "Effects I designed were also used in other markets. I only report Malaysia, because other designers owned the data for those regions.",
+        "The same designs were pushed to every market, but each region ran its own strategy, so numbers differ by region. I report Indonesia, the region this figure comes from.",
       ],
       chart: {
-        title: "Videos a week using AR effects, Malaysia",
+        title: "Videos a week using AR effects, Indonesia",
         note: "Approximate. Two points only: nothing is shown between them.",
         bars: [
           { label: "Before the library refresh", value: 30, display: "~30" },
@@ -150,10 +162,30 @@ export const MISSIONS: {
       ],
       highlights: [
         "Designed AR effects, stickers and filters for Shopee Video as a product designer on the SDK, alongside everyday UI and UX work",
-        "Owned design for the Malaysia region, working with a regional team that changed owners often",
+        "Owned design for the Malaysia region, where the focus was templates, which grew from ~200 to ~34K weekly uses",
         "Replaced a library built for another market with effects made for local users, and refreshed it every week",
         "Designed commercial effects with editable text, now live on the Shopee platform",
         "Worked in a team of four designers, one per region, deciding and shipping fast",
+      ],
+    },
+    {
+      id: "tana",
+      label: "Mission 02",
+      title: "Tana: making recycling visible and rewarding",
+      summary:
+        "A 12-week solo concept for a recycling app in Indonesia, built from interviews, a survey and visits to local waste banks. Never launched: the work is in the research and the decisions it led to.",
+      role: "Researcher & designer",
+      focus: "User research, mobile UX, design systems",
+      surface: "Mobile app",
+      status: "Concept",
+      year: "2024",
+      stack: ["User research", "Interviews & surveys", "Field visits", "Figma", "Auto layout", "Components", "Interactive prototype", "Usability testing"],
+      image: "/tana/hero.jpg",
+      highlights: [
+        "Ran field research alone: interviews, a survey and visits to local waste banks in Indonesia",
+        "Turned the findings into three insights and five design decisions",
+        "Designed the individual and community experience of a recycling app, from onboarding to pickup tracking",
+        "Tested the prototype with five participants",
       ],
     }
   ];

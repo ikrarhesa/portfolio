@@ -1,5 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import PerspectiveGrid from "./PerspectiveGrid";
+import { useTheme } from "../hooks/useTheme";
+import ThemeNudge from "./ThemeNudge";
 
 const NAV = [
   { id: "work", label: "Work", href: "#work" },
@@ -14,6 +16,7 @@ type ShellLayoutProps = {
 };
 
 function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
+  const [theme, toggleTheme] = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -77,11 +80,11 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
   return (
     <div className="min-h-screen text-zinc-200 relative">
       {/* Quiet backdrop: the grid stays as atmosphere, not competition for the text */}
-      <div className="fixed inset-0 z-0 opacity-[0.12] pointer-events-none" aria-hidden>
+      <div className="dark-only fixed inset-0 z-0 opacity-[0.12] pointer-events-none" aria-hidden>
         <PerspectiveGrid />
       </div>
       <div
-        className="fixed inset-0 z-0 pointer-events-none"
+        className="dark-only fixed inset-0 z-0 pointer-events-none"
         aria-hidden
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(217,70,239,0.10), transparent 60%)" }}
       />
@@ -89,7 +92,7 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
       <header
         className={[
           "sticky top-0 z-30 border-b transition-[background-color,border-color,backdrop-filter] duration-300",
-          scrolled ? "border-white/10 bg-[#07060b]/85 backdrop-blur" : "border-transparent bg-transparent",
+          scrolled ? "border-white/10 bg-[var(--bg)]/85 backdrop-blur" : "border-transparent bg-transparent",
         ].join(" ")}
       >
         <div
@@ -132,6 +135,31 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
             ))}
           </nav>
 
+          {/* Right-hand cluster: the toggle belongs beside the status pill, not adrift mid-header */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* The bubble is anchored to the toggle, so its tail points at the right thing */}
+            <span className="relative inline-flex">
+            <ThemeNudge theme={theme} onAccept={toggleTheme} />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            title={theme === "dark" ? "Light theme" : "Dark theme"}
+            className="inline-flex size-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100 focus-visible:outline-2 focus-visible:outline-fuchsia-400"
+          >
+            {theme === "dark" ? (
+              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+              </svg>
+            )}
+          </button>
+            </span>
+
           <a
             href="#contact"
             className="hidden sm:inline-flex items-center gap-2 text-xs text-emerald-300 border border-emerald-400/30 rounded-full px-3 py-1.5 hover:bg-emerald-400/10 focus-visible:outline-2 focus-visible:outline-emerald-300"
@@ -142,6 +170,7 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
             </span>
             Available for work
           </a>
+          </div>
         </div>
       </header>
 
