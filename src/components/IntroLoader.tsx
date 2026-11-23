@@ -226,7 +226,7 @@ export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void
             </b>
           </span>
         </div>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-[#ffffff] md:text-5xl">
+        <div role="presentation" className="mt-4 text-4xl font-bold tracking-tight text-[#ffffff] md:text-5xl">
           {words.map((w, i) => (
             <span key={w} className="intro-word inline-block" style={css({ animationDelay: `${1.5 + i * 0.12}s` })}>
               {w}&nbsp;
@@ -235,7 +235,7 @@ export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void
           <span className="intro-word inline-block" style={css({ animationDelay: "1.76s" })}>
             <span className="shimmer-cyan">Hesa.</span>
           </span>
-        </h1>
+        </div>
         <p className="intro-sub mt-3 text-base text-[#a1a1aa] md:text-lg" style={css({ animationDelay: "2s" })}>
           I design video, live, AR and marketplace products.
         </p>

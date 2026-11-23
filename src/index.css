@@ -607,3 +607,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .theme-nudge { animation: none; }
 }
+
+/* On phones the bubble lands on top of the hero text, so it stays off small screens */
+@media (max-width: 639px) {
+  .theme-nudge { display: none; }
+}
