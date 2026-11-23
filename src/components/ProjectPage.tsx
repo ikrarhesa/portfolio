@@ -5,9 +5,11 @@ import Label from "./Label";
 import ProjectThumb from "./ProjectThumb";
 import FilterVideo from "./FilterVideo";
 import TanaCaseStudy from "./TanaCaseStudy";
+import TemplateCaseStudy from "./TemplateCaseStudy";
 
 export default function ProjectPage({ mission }: { mission: Mission }) {
   if (mission.id === "tana") return <TanaCaseStudy mission={mission} />;
+  if (mission.id === "template") return <TemplateCaseStudy mission={mission} />;
 
   const index = MISSIONS.findIndex((m) => m.id === mission.id);
   const next = MISSIONS[(index + 1) % MISSIONS.length];
@@ -77,15 +79,78 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
         </section>
       ))}
 
+      {/* The numbered moves: one group, so 1-2-3 reads as steps rather than as unrelated sections */}
+      {mission.moves && mission.moves.length > 0 && (
+        <section className="mt-14 grid gap-6 md:grid-cols-[1fr_2fr] md:gap-10" aria-labelledby="moves-heading">
+          <div>
+            <Label>What I did</Label>
+            <h2 id="moves-heading" className="mt-2 text-xl font-semibold text-zinc-50">
+              {mission.moves.length} moves
+            </h2>
+            {mission.movesIntro && <p className="mt-3 text-sm leading-relaxed text-zinc-400">{mission.movesIntro}</p>}
+          </div>
+          <div className="min-w-0 space-y-5">
+            <ol className="space-y-5">
+              {mission.moves.map((m, i) => (
+                <li
+                  key={m.title}
+                  className="grid items-start gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:grid-cols-[1fr_190px] md:p-6"
+                >
+                  <div>
+                    <p className="font-mono text-xs uppercase tracking-widest text-fuchsia-300">
+                      Move {String(i + 1).padStart(2, "0")}
+                    </p>
+                    <h3 className="mt-2 text-lg font-semibold tracking-tight text-zinc-50">{m.title}</h3>
+                    <div className="mt-3 space-y-3 text-base leading-relaxed text-zinc-300">
+                      {m.body.map((p) => (
+                        <p key={p}>{p}</p>
+                      ))}
+                    </div>
+                  </div>
+                  <figure className="mx-auto w-full max-w-[190px] sm:mx-0">
+                    <img
+                      src={m.image.src}
+                      alt={m.image.alt}
+                      loading="lazy"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 object-cover"
+                    />
+                    <figcaption className="mt-2 text-xs leading-snug text-zinc-500">{m.image.caption}</figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ol>
+
+            {mission.process && (
+              <div className="rounded-2xl border border-white/10 p-5 md:p-6">
+                <h3 className="font-mono text-xs uppercase tracking-widest text-zinc-500">{mission.process.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-zinc-400">{mission.process.body}</p>
+                <ol className="mt-4 flex flex-wrap items-center gap-2">
+                  {mission.process.steps.map((st, i) => (
+                    <li key={st} className="flex items-center gap-2">
+                      {i > 0 && (
+                        <span aria-hidden className="text-zinc-500">
+                          →
+                        </span>
+                      )}
+                      <span className="rounded-md border border-white/10 px-2.5 py-1 text-sm text-zinc-200">{st}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* AR filters, as evidence */}
       {mission.showArFilters && (
         <section className="mt-20" aria-labelledby="ar-filters-heading">
           <Label>The work</Label>
           <h2 id="ar-filters-heading" className="mt-3 text-2xl font-semibold tracking-tight text-zinc-50">
-            AR filters I developed
+            Effects I designed
           </h2>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-zinc-300">
-            Screen recordings of the effects. Each one reacts to something different, or to nothing at all. They loop while on screen, and a tap pauses or plays.
+            Three effects from the library: one for selling, two made for local users. Screen recordings, looping while on screen. A tap pauses or plays.
           </p>
           <div className="mt-10 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {AR_FILTERS.map((f, i) => (

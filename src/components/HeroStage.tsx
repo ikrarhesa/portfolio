@@ -4,10 +4,9 @@ import HoloShip from "./HoloShip";
 import SoulLight from "./SoulLight";
 import { createLandmarker, openCamera, runFaceAR, type ArEvent, type TemplateId } from "../lib/faceAR";
 
-const TEMPLATES: { id: TemplateId; label: string; icon: string; hint: string }[] = [
-  { id: "cat", label: "Cutie Bear", icon: "🧸", hint: "Smile, raise your brows" },
-  { id: "wish", label: "Make a wish", icon: "🎂", hint: "Blow out the candles" },
-  { id: "match", label: "Face Match", icon: "😜", hint: "Copy the doodle face" },
+const FILTERS: { id: TemplateId; label: string; icon: string }[] = [
+  { id: "gum", label: "Bubble Gum", icon: "🫧" },
+  { id: "laser", label: "Laser Eyes", icon: "⚡" },
 ];
 
 // Demo head centre (120, 170)
@@ -26,12 +25,10 @@ function describeCameraError(err: unknown) {
 }
 
 export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => void }) {
-  const [template, setTemplate] = useState<TemplateId>("cat");
-  const [auto, setAuto] = useState(true);
+  const [filter, setFilter] = useState<TemplateId>("gum");
   const [cam, setCam] = useState<CamState>("off");
   const [camMsg, setCamMsg] = useState("");
-  const [hovering, setHovering] = useState(false);
-  const [note, setNote] = useState<ArEvent | null>(null); // result of a filter (wish granted, match score)
+  const [note, setNote] = useState<ArEvent | null>(null); // result of a filter (how big the bubble got)
   const [inView, setInView] = useState(true); // the demo pauses itself when scrolled out of view
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -41,15 +38,15 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointer = useRef({ x: 0, y: 0, t: 0 });
-  const templateRef = useRef<TemplateId>("cat");
+  const filterRef = useRef<TemplateId>("gum");
   const camOnRef = useRef(false);
   const stopLoopRef = useRef<(() => void) | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const runIdRef = useRef(0); // lets a cancelled start ignore results that arrive late
 
   useEffect(() => {
-    templateRef.current = template;
-  }, [template]);
+    filterRef.current = filter;
+  }, [filter]);
   useEffect(() => {
     camOnRef.current = cam === "on";
   }, [cam]);
@@ -110,7 +107,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
     };
   }, []);
 
-  // Track visibility for the rest of the demo (template cycling, CSS animations)
+  // Track visibility for the rest of the demo (CSS animations, the canvas loops)
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
@@ -118,15 +115,6 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-
-  // Cycle templates on its own until the visitor picks one
-  useEffect(() => {
-    if (!auto || cam !== "off" || hovering || !inView || prefersReducedMotion()) return;
-    const timer = setInterval(() => {
-      setTemplate((t) => TEMPLATES[(TEMPLATES.findIndex((x) => x.id === t) + 1) % TEMPLATES.length].id);
-    }, 4200);
-    return () => clearInterval(timer);
-  }, [auto, cam, hovering, inView]);
 
   const stopCamera = () => {
     stopLoopRef.current?.();
@@ -149,7 +137,6 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
     const cancelled = () => runIdRef.current !== runId;
     setCam("loading");
     setCamMsg("");
-    setAuto(false);
     setNote(null);
     try {
       if (!navigator.mediaDevices?.getUserMedia) throw new Error("unsupported");
@@ -172,7 +159,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
         video,
         canvas: canvasRef.current!,
         landmarker,
-        getTemplate: () => templateRef.current,
+        getTemplate: () => filterRef.current,
         onEvent: (e) => setNote(e.kind === "reset" ? null : e),
       });
       setCam("on");
@@ -211,10 +198,6 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       style={{ width: "clamp(180px, calc((100svh - 23rem) / 2.07), 268px)" }}
       role="group"
       aria-label="Interactive AR template demo"
-      onPointerEnter={() => setHovering(true)}
-      onPointerLeave={() => setHovering(false)}
-      onFocus={() => setHovering(true)}
-      onBlur={() => setHovering(false)}
     >
       {/* Glow behind the phone */}
       <div
@@ -232,7 +215,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
           <span aria-hidden className="absolute -left-[3px] top-[37%] h-[9%] w-[3px] rounded-l bg-zinc-600" />
           <span aria-hidden className="absolute -right-[3px] top-[30%] h-[14%] w-[3px] rounded-r bg-zinc-600" />
           <div className="rounded-[2rem] bg-black p-[6px]">
-            <div className="relative overflow-hidden rounded-[1.7rem]">
+            <div className="@container relative overflow-hidden rounded-[1.7rem]">
               <svg viewBox="0 0 240 496" className="block w-full" aria-hidden>
                 <defs>
                   <linearGradient id="hs-bg" x1="0" y1="0" x2="0" y2="1">
@@ -253,9 +236,6 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
                 <g ref={faceRef}>
                   <circle className="core-anim core-halo" cx="120" cy="223" r="128" fill="url(#core-halo)" />
                 </g>
-                <text x="120" y="378" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="11" fontWeight="600" fill="#f5d0fe" fillOpacity="0.9" letterSpacing="2.5">
-                  TRY IT YOURSELF
-                </text>
               </svg>
 
               {/* The soul-absorb light where the camera preview will appear */}
@@ -265,16 +245,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
                 </div>
               )}
 
-              {/* The gem is also a button: it starts the camera */}
-              {cam !== "on" && (
-                <button
-                  type="button"
-                  onClick={toggleCamera}
-                  aria-label="Try it on your face"
-                  className="absolute left-[20%] top-[31%] h-[28%] w-[60%] rounded-full focus-visible:outline-2 focus-visible:outline-fuchsia-300"
-                />
-              )}
-              <span aria-hidden className="pointer-events-none absolute left-1/2 top-[1.7%] h-[4.2%] w-[30%] -translate-x-1/2 rounded-full bg-black" />
+              <span aria-hidden className="pointer-events-none absolute left-1/2 top-[1.7%] z-10 h-[4.2%] w-[30%] -translate-x-1/2 rounded-full bg-black" />
 
             {/* Camera mode: real video + real face landmarks drawn here */}
             <video ref={videoRef} playsInline muted className="pointer-events-none absolute h-px w-px opacity-0" />
@@ -288,6 +259,21 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
                 Starting camera and loading face tracking…
               </div>
             )}
+
+            <button
+              type="button"
+              onClick={toggleCamera}
+              className={[
+                "absolute left-1/2 z-20 inline-flex -translate-x-1/2 cursor-pointer items-center whitespace-nowrap rounded-full border border-white/25 bg-black/55 font-semibold text-white backdrop-blur transition-colors hover:border-fuchsia-300/70 hover:bg-black/75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300",
+                cam === "on" ? "top-[8.5%] gap-1.5 px-3 py-1.5 text-[11px]" : "bottom-[6%] gap-2 px-3.5 py-2 text-xs @max-[210px]:gap-1.5 @max-[210px]:px-3 @max-[210px]:text-[11px] @max-[175px]:[&>svg]:hidden",
+              ].join(" ")}
+            >
+              <svg aria-hidden viewBox="0 0 24 24" className="size-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" />
+                <circle cx="12" cy="13" r="3.5" />
+              </svg>
+              {cam === "loading" ? "Cancel" : cam === "on" ? "Stop camera" : "Try the AR Experience"}
+            </button>
             </div>
           </div>
         </div>
@@ -301,20 +287,20 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       {/* Controls */}
       <div className="mt-6 flex flex-col items-center gap-2.5">
         {cam === "on" ? (
-          <div role="radiogroup" aria-label="AR filter" className="flex w-[300px] max-w-[92vw] gap-1.5">
-            {TEMPLATES.map((t) => (
+          <div role="radiogroup" aria-label="AR filter" className="flex w-[260px] max-w-[92vw] gap-1.5">
+            {FILTERS.map((t) => (
               <button
                 key={t.id}
                 type="button"
                 role="radio"
-                aria-checked={template === t.id}
+                aria-checked={filter === t.id}
                 onClick={() => {
-                  setTemplate(t.id);
-                  setAuto(false);
+                  setFilter(t.id);
+                  setNote(null);
                 }}
                 className={[
-                  "flex flex-1 flex-col items-center gap-0.5 rounded-xl border px-1.5 py-2 transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400",
-                  template === t.id
+                  "flex flex-1 flex-col items-center gap-0.5 rounded-xl border px-2 py-2 transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400",
+                  filter === t.id
                     ? "border-fuchsia-400/60 bg-fuchsia-500/15 text-zinc-100"
                     : "border-white/10 text-zinc-400 hover:border-white/25 hover:text-zinc-100",
                 ].join(" ")}
@@ -326,32 +312,17 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
           </div>
         ) : null}
 
-        <button
-          type="button"
-          onClick={toggleCamera}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2 text-sm font-semibold text-zinc-100 transition-colors hover:border-fuchsia-300/60 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
-        >
-          <svg aria-hidden viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" />
-            <circle cx="12" cy="13" r="3.5" />
-          </svg>
-          {cam === "loading" ? "Cancel" : cam === "on" ? "Stop camera" : "Try it on your face"}
-        </button>
-
-        {note?.kind === "wish" && (
-          <a
-            href="#contact"
-            className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-fuchsia-200 focus-visible:outline-2 focus-visible:outline-fuchsia-400"
-          >
-            Wish granted. Let's build it →
-          </a>
-        )}
-        {note?.kind === "match" && (
+        {note?.kind === "laser" && (
           <p className="text-center font-mono text-[11px] text-fuchsia-200" role="status">
-            You read {note.score}/{note.total} faces.{" "}
-            <a href="#contact" className="underline decoration-dotted underline-offset-4 hover:text-white">
-              Say hi
-            </a>
+            Shots fired: {note.shots}
+            <span className="text-zinc-400"> · {Math.round(note.power * 100)}% charge</span>
+          </p>
+        )}
+        {note?.kind === "gum" && (
+          <p className="text-center font-mono text-[11px] text-fuchsia-200" role="status">
+            {note.popped ? "POP! " : "Saved it — "}
+            {note.size.toFixed(1)}× your face
+            {note.best > note.size + 0.05 && <span className="text-zinc-400"> · best {note.best.toFixed(1)}×</span>}
           </p>
         )}
 

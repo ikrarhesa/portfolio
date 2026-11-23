@@ -118,22 +118,30 @@ body {
 .blink { animation: blink 1.1s steps(1) infinite; }
 
 @keyframes shimmer { to { background-position: -200% center; } }
-/* A glint sweeps across the word once, then it rests (and replays on hover) */
-@keyframes shimmer-once { from { background-position: 0% center; } to { background-position: 100% center; } }
-@keyframes shimmer-replay { from { background-position: 0% center; } to { background-position: 100% center; } }
+/* The emphasised word in the hero title. At rest it is plain headline text; only on hover does it
+   glow and shimmer. The gradient is built from the headline's own colour with a single glint in it,
+   so switching it on changes nothing visible until the glint passes. */
+@keyframes shimmer-sweep {
+  0% { background-position: 100% center; }
+  60%, 100% { background-position: 0% center; }
+}
 .shimmer-text {
   display: inline-block;
-  /* Fuchsia and cyan with a white glint */
-  background-image: linear-gradient(110deg, #e879f9 0%, #22d3ee 28%, #ffffff 46%, #22d3ee 64%, #e879f9 100%);
-  background-size: 250% auto;
-  background-position: 100% center;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 8px rgba(232, 121, 249, 0.4)) drop-shadow(0 0 20px rgba(34, 211, 238, 0.22));
-  animation: shimmer-once 2.4s ease-in-out 0.9s both;
+  transition: filter 0.4s ease;
 }
-.shimmer-text:hover { animation: shimmer-replay 1.6s ease-in-out both; }
+@media (hover: hover) and (pointer: fine) {
+  .shimmer-text:hover {
+    --ink: var(--color-zinc-50);
+    background-image: linear-gradient(110deg, var(--ink) 0%, var(--ink) 42%, #d946ef 50%, var(--ink) 58%, var(--ink) 100%);
+    background-size: 300% auto;
+    background-position: 100% center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 10px rgba(217, 70, 239, 0.45));
+    animation: shimmer-sweep 2.4s ease-in-out infinite;
+  }
+}
 
 @keyframes scroll-dot {
   0% { transform: translateY(0); opacity: 0; }
@@ -221,8 +229,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .game-hit-a, .game-hit-b, .lives-pop, .holo-flicker, .holo-bob, .holo-beam, .holo-scan, .holo-ghost, .holo-ship:hover .holo-laser { animation: none !important; }
-  .rise, .video-progress, .scroll-dot, .ring-pulse, .pixel-float, .bob, .glitch-a, .glitch-b, .blink, .shimmer-text { animation: none !important; }
-  .shimmer-text { background-position: 100% center; }
+  .rise, .video-progress, .scroll-dot, .ring-pulse, .pixel-float, .bob, .glitch-a, .glitch-b, .blink, .shimmer-text:hover { animation: none !important; }
   .scroll-dot { opacity: 1; }
 }
 
@@ -472,12 +479,6 @@ body {
 /* Dark-only atmosphere: the perspective grid and glows */
 :root:not([data-theme="dark"]) .dark-only { display: none; }
 
-/* Headline gradient: the white glint vanishes on a light page, so use a deeper, solid-ish ramp and no glow */
-:root:not([data-theme="dark"]) .shimmer-text {
-  background-image: linear-gradient(110deg, #a21caf 0%, #0e7490 28%, #c026d3 46%, #0e7490 64%, #a21caf 100%);
-  filter: none;
-}
-
 /* Light theme: primary buttons go quiet (solid ink, no glow); fuchsia stays as a small accent elsewhere */
 :root:not([data-theme="dark"]) a.bg-fuchsia-500.text-white:not(.fixed *),
 :root:not([data-theme="dark"]) button.bg-fuchsia-500.text-white:not(.fixed *) {
@@ -531,8 +532,8 @@ body {
 @media (hover: hover) and (pointer: fine) {
   :root:not([data-theme="dark"]) .tilt-scene:hover .tilt-card,
   :root:not([data-theme="dark"]) .tilt-card:focus-within {
-    border-color: rgba(192, 38, 211, 0.5);
-    box-shadow: 0 0 0 1px rgba(192, 38, 211, 0.16);
+    border-color: rgba(24, 24, 27, 0.3);
+    box-shadow: 0 0 0 1px rgba(24, 24, 27, 0.06);
   }
   :root:not([data-theme="dark"]) .tilt-scene:hover .tilt-layer-thumb,
   :root:not([data-theme="dark"]) .tilt-card:focus-within .tilt-layer-thumb {

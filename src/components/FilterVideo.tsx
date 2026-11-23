@@ -7,7 +7,17 @@ const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: r
  * in view, and pauses when it isn't. Click/tap toggles play. Reduced-motion users get a still poster
  * until they press play.
  */
-export default function FilterVideo({ src, poster, title }: { src: string; poster: string; title: string }) {
+export default function FilterVideo({
+  src,
+  poster,
+  title,
+  aspect = "540 / 962",
+}: {
+  src: string;
+  poster: string;
+  title: string;
+  aspect?: string; // CSS aspect-ratio of the clip, "width / height"
+}) {
   const wrapRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [near, setNear] = useState(false); // close enough to start downloading
@@ -47,7 +57,7 @@ export default function FilterVideo({ src, poster, title }: { src: string; poste
       aria-label={`${playing ? "Pause" : "Play"} preview: ${title}`}
       className="group relative block w-full rounded-[2.2rem] border border-fuchsia-400/40 bg-black p-2 text-left shadow-[0_0_50px_rgba(217,70,239,0.18)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_0_60px_rgba(217,70,239,0.32)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fuchsia-400"
     >
-      <div className="relative aspect-[540/962] overflow-hidden rounded-[1.7rem] bg-[#0b0712]">
+      <div className="relative overflow-hidden rounded-[1.7rem] bg-[#0b0712]" style={{ aspectRatio: aspect }}>
         <video
           ref={videoRef}
           src={near ? src : undefined}

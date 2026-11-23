@@ -33,7 +33,7 @@ export default function MissionCard({ mission, featured }: { mission: Mission; f
         ref={cardRef}
         className={[
           "tilt-card group relative h-full rounded-2xl border border-white/10 bg-[var(--surface)] focus-within:border-fuchsia-400/60",
-          featured ? "md:grid md:grid-cols-[1.1fr_1fr]" : "",
+          featured ? "md:grid md:grid-cols-[1.1fr_1fr]" : "flex flex-col",
         ].join(" ")}
       >
         <ProjectThumb
@@ -43,14 +43,8 @@ export default function MissionCard({ mission, featured }: { mission: Mission; f
             featured ? "md:h-full md:border-b-0 md:border-r md:rounded-tr-none md:rounded-l-2xl" : "",
           ].join(" ")}
         />
-        <div className="tilt-layer-text p-6 md:p-7 flex flex-col">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-zinc-400">
-            <span className="text-fuchsia-300">{mission.status}</span>
-            <span aria-hidden>·</span>
-            <span>{mission.year}</span>
-            <span aria-hidden>·</span>
-            <span>{mission.surface}</span>
-          </div>
+        <div className="tilt-layer-text p-6 md:p-7 flex flex-col flex-1">
+          <p className="font-mono text-xs text-fuchsia-300">{mission.status}</p>
           <h3 className={`mt-3 font-semibold tracking-tight text-zinc-50 ${featured ? "text-2xl md:text-3xl" : "text-xl"}`}>
             {/* Stretched link: the whole card is clickable, one tab stop */}
             <a
@@ -61,10 +55,13 @@ export default function MissionCard({ mission, featured }: { mission: Mission; f
             </a>
           </h3>
           <p className="mt-3 text-base leading-relaxed text-zinc-300">{mission.summary}</p>
-          <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-fuchsia-300 group-hover:text-fuchsia-200">
-            View case study
-            <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
-          </p>
+          {/* Looks like a button; the stretched title link above is the real (single) tab stop */}
+          <div className="mt-auto pt-6">
+            <span className="inline-flex items-center gap-2 rounded-xl bg-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(217,70,239,0.3)] transition-colors group-hover:bg-fuchsia-400 group-focus-within:bg-fuchsia-400">
+              View case study
+              <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+            </span>
+          </div>
         </div>
         <div className="tilt-sheen" aria-hidden />
       </article>

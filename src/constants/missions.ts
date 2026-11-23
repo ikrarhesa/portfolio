@@ -1,4 +1,4 @@
-export type MissionId = "video-ar" | "tana";
+export type MissionId = "video-ar" | "template" | "tana";
 
 /** A visual that sits beside a story section */
 export type StoryVisual =
@@ -11,6 +11,8 @@ export const MISSIONS: {
   id: MissionId;
   label: string;
   title: string;
+  cardTitle: string; // short title on the home-page card
+  tagline: string; // one line under it
   summary: string;
   role: string;
   focus: string;
@@ -23,6 +25,9 @@ export const MISSIONS: {
   gallery?: string[]; // extra screenshots shown on the project page
   cover?: { video: string; poster: string }[]; // looping phone clips used as the thumbnail (beats `image`)
   story?: { title: string; body: string[]; visual?: StoryVisual }[]; // case-study sections, shown after the meta strip
+  movesIntro?: string; // one line above the numbered moves
+  moves?: { title: string; body: string[]; image: { src: string; alt: string; caption: string } }[]; // the numbered "what I did" steps
+  process?: { title: string; body: string; steps: string[] }; // tools, shown as a short flow
   showArFilters?: boolean; // embed the AR filter recordings (constants/arFilters.ts) in the page
   results?: { value: string; label: string }[]; // headline numbers
   resultsNote?: string[]; // how to read the numbers (scope, caveats)
@@ -33,20 +38,23 @@ export const MISSIONS: {
     {
       id: "video-ar",
       label: "Mission 01",
-      title: "~16× more videos using AR effects: localizing Shopee Video for Indonesia",
+      cardTitle: "Localizing Shopee Video effects",
+      tagline: "AR effects made for Indonesian users",
+      title: "Localizing Shopee Video's AR effects for Indonesia",
       summary:
         "Replaced an effects library built for another market with one made for Indonesian users, refreshed it every week, and gave sellers commercial effects with text they can edit.",
       role: "Product designer · SDK",
       focus: "Localization, content library, commercial tools",
       surface: "AR effects · Shopee Video",
       status: "Shipped",
-      year: "2022–2023",
-      stack: ["AR effects", "Stickers", "Content library", "Localization", "Cross-region work"],
+      year: "2022–present",
+      stack: ["AR effects", "Adobe Illustrator", "After Effects", "Shopee Effect (in-house)", "Localization", "Content library", "Cross-region work"],
       cover: [
-        { video: "/ar/holo-glasses.mp4", poster: "/ar/holo-glasses.jpg" },
+        { video: "/ar/ngantuk-ya.mp4", poster: "/ar/ngantuk-ya.jpg" },
         { video: "/ar/editable-text.mp4", poster: "/ar/editable-text.jpg" },
         { video: "/ar/nod-to-switch.mp4", poster: "/ar/nod-to-switch.jpg" },
       ],
+      movesIntro: "Three moves took the library from built for another market to built for Indonesian users.",
       showArFilters: true,
       story: [
         {
@@ -61,14 +69,14 @@ export const MISSIONS: {
             items: [
               { when: "2022", text: "Shopee Video launches, with a library built for another market" },
               { when: "Sep 2022", text: "I join as the second designer on the team" },
-              { when: "2023", text: "Effects, stickers and templates keep shipping" },
+              { when: "2023", text: "Effects, stickers and templates keep shipping, and templates take off in Malaysia" },
+              { when: "Today", text: "Still shipping, at a lower frequency. My work now leans more toward UI and UX projects" },
             ],
           },
         },
         {
           title: "The problem",
           body: ["The library was not localized, and in Indonesia few people used it."],
-          visual: { type: "stat", value: "~30", label: "videos a week using an effect in Indonesia (approximate)" },
         },
         {
           title: "The constraints",
@@ -83,94 +91,94 @@ export const MISSIONS: {
             note: "Four designers, one per region. The Malaysia owner kept changing.",
           },
         },
+      ],
+      moves: [
         {
-          title: "1. Make it local",
+          title: "Make it local",
           body: [
-            "The earlier library leaned on sparkly, kawaii looks and dense beauty filters. I replaced it with effects made for local users, starting with stickers for Indonesia: everyday use first, with copy in their own language.",
+            "The earlier library leaned on sparkly, kawaii looks and dense beauty filters. I replaced it with effects made for local users, starting with stickers for Indonesia: everyday use first, with copy in their own language. I kept the decoration light on purpose, so the copy and the idea did the work.",
           ],
-          visual: {
-            type: "image",
-            src: "/ar/story-local.jpg",
-            alt: "A red “Penawaran Terbatas!” sticker above a face",
-            caption: "“Penawaran Terbatas!” is “Limited offer!” in Indonesian.",
-          },
+          image: { src: "/ar/story-local.jpg", alt: "A red “Penawaran Terbatas!” sticker above a face", caption: "“Penawaran Terbatas!” is “Limited offer!” in Indonesian." },
         },
         {
-          title: "2. Refresh every week",
+          title: "Refresh every week",
           body: [
             "Use of an effect is specific and tied to a moment, so one launch fades fast. The library was refreshed every week, so users always had something new to try. Regions set their own cadence, and Indonesia ran weekly.",
           ],
-          visual: {
-            type: "image",
-            src: "/ar/story-new.jpg",
-            alt: "The effects library on its “Baru” (New) tab, with a grid of effect thumbnails",
-            caption: "The effects library today, on the “Baru” (New) tab.",
-          },
+          image: { src: "/ar/story-new.jpg", alt: "The effects library on its “Baru” (New) tab, with a grid of effect thumbnails", caption: "The effects library today, on the “Baru” (New) tab." },
         },
         {
-          title: "3. Let sellers write the text",
+          title: "Let sellers write the text",
           body: [
             "Most stickers at that point were for daily use, not e-commerce. So I designed commercial effects where the seller types their own text, such as “Big sale” or “Limited offer”. A fixed sticker can't fit every offer. Editable text can.",
             "These shipped alongside the Shopee Video launch, and what we saw from them became an early learning.",
           ],
-          visual: {
-            type: "image",
-            src: "/ar/story-typing.jpg",
-            alt: "A blue “Limited Offer!!!!” sticker above a face, with the text field below",
-            caption: "The seller types the offer and the sticker updates live.",
-          },
-        },
-        {
-          title: "4. Templates in Malaysia",
-          body: [
-            "Stickers and templates are different kinds of visual, but both sit under the same SDK, and my designs shipped to every market. As the designer for Malaysia, my regional focus was templates rather than stickers.",
-            "Weekly uses of Malaysia video templates grew from about 200 to about 34K.",
-          ],
-          visual: { type: "stat", value: "~200 → ~34K", label: "weekly uses of Malaysia video templates (approximate)" },
+          image: { src: "/ar/story-typing.jpg", alt: "A blue “Limited Offer!!!!” sticker above a face, with the text field below", caption: "The seller types the offer and the sticker updates live." },
         },
       ],
+      process: {
+        title: "How I made them",
+        body: "Each effect started as artwork, was animated, exported as PNG and then built in Shopee's in-house tool.",
+        steps: ["Adobe Illustrator", "After Effects", "PNG export", "Shopee Effect"],
+      },
       results: [
         {
-          value: "~30 → ~500",
-          label: "videos a week using AR effects in Indonesia, before and after the library refresh (approximate)",
+          value: "30 → 500",
+          label: "videos a week using AR effects in Indonesia, before and after the library refresh",
         },
         {
-          value: "~16×",
-          label: "growth in weekly videos using effects (500 ÷ 30, worked out from the approximate figures)",
-        },
-        {
-          value: "~200 → ~34K",
-          label: "weekly uses of Malaysia video templates, the region I owned (approximate)",
+          value: "16×",
+          label: "growth in weekly videos using effects (500 ÷ 30)",
         },
       ],
       resultsNote: [
-        "These numbers are approximate. Effects are smaller than templates, because each one is used for something specific and for a short time. A new effect usually got only about 5 to 6 uses in its first two months. Across a library that is refreshed every week, those add up to hundreds of videos a week.",
+        "Figures come from Shopee's internal dashboards, Data Studio and DataZoo, which track views, videos posted, completion rate, conversion rate, comments and likes. The numbers here are rounded, and they count videos posted using an effect.",
+        "Effects are smaller than templates, because each one is used for something specific and for a short time. A new effect usually got only about 5 to 6 uses in its first two months. Across a library that is refreshed every week, those add up to hundreds of videos a week.",
         "The same designs were pushed to every market, but each region ran its own strategy, so numbers differ by region. I report Indonesia, the region this figure comes from.",
       ],
-      chart: {
-        title: "Videos a week using AR effects, Indonesia",
-        note: "Approximate. Two points only: nothing is shown between them.",
-        bars: [
-          { label: "Before the library refresh", value: 30, display: "~30" },
-          { label: "After", value: 500, display: "~500" },
-        ],
-      },
       learnings: [
-        "Adoption needs a rhythm, not a launch. The weekly refresh is what increased usage.",
+        "Local relevance beats polish. The effects that worked used Indonesian copy and a light touch, not heavy decoration.",
         "Commercial use needs control. Editable text made effects useful for selling, not just for fun, and it was an early learning from the launch.",
         "Small numbers can still mean real adoption. Effects will never match templates in volume, because their use is specific and short-lived. The signal to watch is whether people keep using them.",
       ],
       highlights: [
         "Designed AR effects, stickers and filters for Shopee Video as a product designer on the SDK, alongside everyday UI and UX work",
-        "Owned design for the Malaysia region, where the focus was templates, which grew from ~200 to ~34K weekly uses",
         "Replaced a library built for another market with effects made for local users, and refreshed it every week",
         "Designed commercial effects with editable text, now live on the Shopee platform",
+        "Built effects with Adobe Illustrator, After Effects and Shopee's in-house Shopee Effect tool",
         "Worked in a team of four designers, one per region, deciding and shipping fast",
       ],
     },
     {
-      id: "tana",
+      id: "template",
       label: "Mission 02",
+      cardTitle: "Shopee Video templates",
+      tagline: "From 200 to 34K weekly uses in Malaysia",
+      title: "Fixing low template adoption in Malaysia: 200 to 34K weekly uses",
+      summary:
+        "Template adoption in Malaysia was low. I reused what worked in Indonesia, researched what Malaysian users like, then designed for them. Weekly uses grew from 200 to 34,000 within three months.",
+      role: "Designer · SDK, Malaysia design direction",
+      focus: "Template library, adoption, trend research",
+      surface: "Video templates · Shopee Video",
+      status: "Shipped",
+      year: "2023",
+      stack: ["Video templates", "SDK toolkit", "Trend research", "TikTok tools", "CapCut", "Competitor review", "Cross-region work"],
+      cover: [
+        { video: "/template/six-frames.mp4", poster: "/template/six-frames.jpg" },
+        { video: "/template/bento-grid.mp4", poster: "/template/bento-grid.jpg" },
+        { video: "/template/windows-like.mp4", poster: "/template/windows-like.jpg" },
+      ],
+      highlights: [
+        "Designer on the Shopee Video SDK, and the one who kept the Malaysia design direction and toolkit",
+        "Researched Malaysian trends through TikTok tools, top content, CapCut, competitors and the local marketing team",
+        "Weekly template uses grew from 200 to 34K within three months, with a single OOTD template driving around 15K",
+      ],
+    },
+    {
+      id: "tana",
+      label: "Mission 03",
+      cardTitle: "Tana",
+      tagline: "A recycling app concept for Indonesia",
       title: "Tana: making recycling visible and rewarding",
       summary:
         "A 12-week solo concept for a recycling app in Indonesia, built from interviews, a survey and visits to local waste banks. Never launched: the work is in the research and the decisions it led to.",
