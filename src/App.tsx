@@ -135,7 +135,7 @@ function App() {
                 className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 md:text-6xl"
                 style={delay(120)}
               >
-                Product designer on the <span className="shimmer-text">AR toolkit</span> behind Shopee Video.
+                Product designer on the <span className="shimmer-text">AR toolkit</span> behind Shopee Video and Live.
               </h1>
               <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-zinc-300" style={delay(260)}>
                 The effects, stickers, filters and templates sellers use, rebuilt for Indonesian users, refreshed every
