@@ -4,6 +4,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../constants/spaceInvaders';
 import { gameAudio } from '../lib/gameAudio';
 import { canUseHeadControl, startHeadControl, type HeadStatus } from '../lib/headControl';
 import { prefetchFaceModel } from '../lib/faceAR';
+import { fill, useContent } from '../i18n';
 
 interface SpaceInvaderModalProps {
     isOpen: boolean;
@@ -12,6 +13,7 @@ interface SpaceInvaderModalProps {
 
 // The dialog (and the game hook with its keyboard listeners) only exists while open
 const GameDialog = ({ onClose }: { onClose: () => void }) => {
+    const g = useContent().game;
     const { canvasRef, score, gameOver, highScore, isNewBest, lives, hitPulse, startGame, stopGame, setControl, setSteer, gameState } = useSpaceInvaders();
     // Alternate between two identical animations so every hit restarts the shake
     const hitClass = hitPulse === 0 ? '' : hitPulse % 2 ? 'game-hit-a' : 'game-hit-b';
@@ -41,10 +43,10 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
         if (headStatus === 'error') setHeadOn(false);
     }, [headStatus]);
     const headLabel: Record<HeadStatus, string> = {
-        loading: 'Warming up…',
-        calibrating: 'Look straight ahead',
-        tracking: 'Move your head',
-        lost: "Can't see you",
+        loading: g.head.loading,
+        calibrating: g.head.calibrating,
+        tracking: g.head.tracking,
+        lost: g.head.lost,
         error: '',
     };
     const modalRef = useRef<HTMLDivElement>(null);
@@ -85,18 +87,18 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
             >
                 {/* Header / Controls */}
                 <div className="flex justify-between items-center mb-2 px-2">
-                    <div className="text-fuchsia-300 font-mono text-xs tracking-widest">SPACE INVADERS</div>
+                    <div className="text-fuchsia-300 font-mono text-xs tracking-widest">{g.title}</div>
                     <div className="ml-auto mr-3 flex items-center gap-1.5">
                         {([
-                            ['Music', '♪', sound.music, toggleMusic],
-                            ['SFX', '◖))', sound.sfx, toggleSfx],
+                            [g.music, '♪', sound.music, toggleMusic],
+                            [g.sfx, '◖))', sound.sfx, toggleSfx],
                         ] as const).map(([label, icon, on, toggle]) => (
                             <button
                                 key={label}
                                 type="button"
                                 onClick={toggle}
                                 aria-pressed={on}
-                                aria-label={`${label} ${on ? 'on' : 'off'}`}
+                                aria-label={fill(g.toggle, { label, state: on ? g.on : g.off })}
                                 className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400 ${
                                     on
                                         ? 'border-fuchsia-400/50 bg-fuchsia-500/15 text-fuchsia-200'
@@ -114,7 +116,7 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                                 onPointerEnter={prefetchFaceModel}
                                 onFocus={prefetchFaceModel}
                                 aria-pressed={headOn}
-                                title="Steer with your head. Runs on your device, nothing is recorded."
+                                title={g.cameraTitle}
                                 className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400 ${
                                     headOn
                                         ? 'border-cyan-300/50 bg-cyan-400/15 text-cyan-100'
@@ -122,13 +124,13 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                                 }`}
                             >
                                 <span aria-hidden>●</span>
-                                Camera
+                                {g.camera}
                             </button>
                         )}
                     </div>
                     <button
                         onClick={onClose}
-                        aria-label="Close game"
+                        aria-label={g.close}
                         className="rounded text-zinc-400 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -180,20 +182,20 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                     {/* Start Screen Overlay */}
                     {!gameStarted && !gameOver && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#07060b]/85 z-20 rounded-lg">
-                            <div className="text-fuchsia-300 font-mono text-2xl font-bold mb-4 animate-pulse">READY?</div>
+                            <div className="text-fuchsia-300 font-mono text-2xl font-bold mb-4 animate-pulse">{g.ready}</div>
                             <button
                                 onClick={(e) => { e.stopPropagation(); handleStart(); }}
                                 className="px-8 py-3 bg-fuchsia-500 text-white font-mono text-lg hover:bg-fuchsia-400 transition-colors rounded-lg shadow-[0_0_24px_rgba(217,70,239,0.5)] focus-visible:outline-2 focus-visible:outline-fuchsia-200"
                             >
-                                START MISSION
+                                {g.start}
                             </button>
                             {headSupported && (
                                 <div className="mt-3 text-center text-[10px] font-mono text-zinc-500">
-                                    Optional: turn on CAMERA to steer with your head.<br />Runs on your device. Nothing is recorded.
+                                    {g.cameraHint1}<br />{g.cameraHint2}
                                 </div>
                             )}
                             <div className="mt-4 text-zinc-400 text-xs font-mono">
-                                {highScore > 0 ? `BEST: ${highScore}` : 'PRESS BUTTON TO START'}
+                                {highScore > 0 ? fill(g.best, { n: highScore }) : g.pressToStart}
                             </div>
                         </div>
                     )}
@@ -201,10 +203,10 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                     {/* Score Overlay */}
                     {gameStarted && (
                         <div className="absolute top-4 left-4 right-4 flex justify-between font-mono text-sm z-10 pointer-events-none">
-                            <span className="text-fuchsia-200">SCORE: {score}</span>
+                            <span className="text-fuchsia-200">{fill(g.score, { n: score })}</span>
                             <div className="flex gap-4 text-cyan-200">
-                                <span>LEVEL: {gameState.current.level}</span>
-                                <span key={lives} className={hitPulse > 0 ? 'lives-pop' : ''}>LIVES: {lives}</span>
+                                <span>{fill(g.level, { n: gameState.current.level })}</span>
+                                <span key={lives} className={hitPulse > 0 ? 'lives-pop' : ''}>{fill(g.lives, { n: lives })}</span>
                             </div>
                         </div>
                     )}
@@ -212,41 +214,41 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                     {/* Level Transition Overlay */}
                     {!gameOver && gameStarted && gameState.current.aliens.length === 0 && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#07060b]/60 z-20">
-                            <div className="text-fuchsia-300 font-mono text-xl font-bold animate-pulse">LEVEL CLEARED</div>
-                            <div className="text-white font-mono text-sm">PREPARE FOR NEXT WAVE</div>
+                            <div className="text-fuchsia-300 font-mono text-xl font-bold animate-pulse">{g.levelCleared}</div>
+                            <div className="text-white font-mono text-sm">{g.nextWave}</div>
                         </div>
                     )}
 
                     {/* Game Over Overlay */}
                     {gameOver && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#07060b]/90 z-20 rounded-lg px-6 text-center">
-                            <div className="text-rose-400 font-mono text-2xl font-bold mb-3 animate-pulse">GAME OVER</div>
-                            <div className="text-white font-mono text-lg">SCORE: {score}</div>
+                            <div className="text-rose-400 font-mono text-2xl font-bold mb-3 animate-pulse">{g.gameOver}</div>
+                            <div className="text-white font-mono text-lg">{fill(g.score, { n: score })}</div>
                             <div className="mt-1 font-mono text-sm text-fuchsia-300">
-                                {isNewBest ? 'NEW BEST!' : `BEST: ${highScore}`}
+                                {isNewBest ? g.newBest : fill(g.best, { n: highScore })}
                             </div>
                             <div className="mt-6 flex gap-3">
                                 <button
                                     onClick={(e) => { e.stopPropagation(); handleStart(); }}
                                     className="px-6 py-2 bg-fuchsia-500 text-white font-mono text-sm hover:bg-fuchsia-400 transition-colors rounded-lg"
                                 >
-                                    RETRY
+                                    {g.retry}
                                 </button>
                                 <button
                                     onClick={onClose}
                                     className="px-6 py-2 border border-white/20 text-zinc-300 font-mono text-sm hover:bg-white/5 transition-colors rounded-lg"
                                 >
-                                    EXIT
+                                    {g.exit}
                                 </button>
                             </div>
                             <div className="mt-6 border-t border-white/10 pt-5">
-                                <p className="font-mono text-xs text-zinc-400">Nice shooting. Want to build something together?</p>
+                                <p className="font-mono text-xs text-zinc-400">{g.niceShooting}</p>
                                 <a
                                     href="/#contact"
                                     onClick={onClose}
                                     className="mt-3 inline-block rounded-lg bg-white px-5 py-2 font-mono text-sm font-semibold text-black hover:bg-fuchsia-200 transition-colors"
                                 >
-                                    Let's work together →
+                                    {g.workTogether}
                                 </a>
                             </div>
                         </div>
@@ -255,16 +257,16 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
 
                 {/* Touch controls (shown only on touch devices) */}
                 {gameStarted && !gameOver && (
-                    <div className="mt-2 hidden [@media(pointer:coarse)]:flex gap-2 select-none touch-none" aria-label="Touch controls">
+                    <div className="mt-2 hidden [@media(pointer:coarse)]:flex gap-2 select-none touch-none" aria-label={g.touch}>
                         {([
                             ['ArrowLeft', '◀', 'flex-1'],
-                            ['Space', 'FIRE', 'flex-[2] bg-fuchsia-500/80'],
+                            ['Space', g.fireLabel, 'flex-[2] bg-fuchsia-500/80'],
                             ['ArrowRight', '▶', 'flex-1'],
                         ] as const).map(([key, label, extra]) => (
                             <button
                                 key={key}
                                 type="button"
-                                aria-label={key === 'Space' ? 'Fire' : key === 'ArrowLeft' ? 'Move left' : 'Move right'}
+                                aria-label={key === 'Space' ? g.fire : key === 'ArrowLeft' ? g.left : g.right}
                                 onPointerDown={(e) => {
                                     e.preventDefault();
                                     setControl(key, true);
@@ -284,8 +286,8 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
 
                 {/* Instructions */}
                 <div className="mt-2 text-center text-zinc-500 text-[10px] font-mono">
-                    <span className="[@media(pointer:coarse)]:hidden">ARROWS to Move • SPACE to Shoot • M to toggle music</span>
-                    <span className="hidden [@media(pointer:coarse)]:inline">Hold ◀ ▶ to move • hold FIRE to shoot</span>
+                    <span className="[@media(pointer:coarse)]:hidden">{g.helpKeys}</span>
+                    <span className="hidden [@media(pointer:coarse)]:inline">{g.helpTouch}</span>
                 </div>
             </div>
         </div>

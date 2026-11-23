@@ -23,6 +23,25 @@ html {
   color-scheme: dark;
 }
 
+/* Japanese. Inter stays first for the Latin text; kana and kanji fall through to the system fonts, so nothing is
+   downloaded. Only applies when <html lang="ja">, so the English site is untouched. */
+:root:lang(ja) {
+  --font-sans: "Inter", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", Meiryo, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", Meiryo, ui-monospace, SFMono-Regular, monospace;
+}
+/* Wrapping and rhythm for Japanese: break between phrases where the browser can, keep punctuation off line
+   starts, open the line height, and drop the negative letter-spacing that squeezes kana and kanji. */
+html:lang(ja) {
+  line-break: strict;
+  word-break: auto-phrase;
+  overflow-wrap: break-word; /* not "anywhere": that lets flex items (the header) shrink below their text */
+}
+html:lang(ja) .tracking-tight { letter-spacing: 0; }
+html:lang(ja) .tracking-widest, html:lang(ja) .tracking-wider { letter-spacing: 0.06em; }
+html:lang(ja) .leading-relaxed { line-height: 1.85; }
+html:lang(ja) .leading-snug { line-height: 1.55; }
+html:lang(ja) .leading-tight, html:lang(ja) h1, html:lang(ja) h2 { line-height: 1.35; }
+
 body {
   font-family: var(--font-sans);
   background: var(--bg);

@@ -203,4 +203,29 @@ export const MISSIONS: {
 
 export type Mission = (typeof MISSIONS)[number];
 
+/**
+ * The fields of a case study that carry readable text. English lives above; other languages (src/i18n/ja/missions.ts)
+ * replace exactly these and share everything else (ids, images, videos, numbers). The unused fields
+ * (label, cardTitle, tagline, highlights) are not shown anywhere, so they are not translated.
+ */
+export type MissionText = Pick<
+  Mission,
+  | "title"
+  | "summary"
+  | "role"
+  | "focus"
+  | "surface"
+  | "status"
+  | "year"
+  | "stack"
+  | "story"
+  | "movesIntro"
+  | "moves"
+  | "process"
+  | "results"
+  | "resultsNote"
+  | "chart"
+  | "learnings"
+>;
+
 export const projectHref = (id: MissionId) => `/work/${id}`;

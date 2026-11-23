@@ -3,10 +3,12 @@ import HoloShip from "./HoloShip";
 
 import SoulLight from "./SoulLight";
 import { createLandmarker, openCamera, runFaceAR, type ArEvent, type TemplateId } from "../lib/faceAR";
+import { fill, useContent } from "../i18n";
 
-const FILTERS: { id: TemplateId; label: string; icon: string }[] = [
-  { id: "gum", label: "Bubble Gum", icon: "🫧" },
-  { id: "laser", label: "Laser Eyes", icon: "⚡" },
+// The filter names come from the content files (home.demo.filters)
+const FILTERS: { id: TemplateId; icon: string }[] = [
+  { id: "gum", icon: "🫧" },
+  { id: "laser", icon: "⚡" },
 ];
 
 // Demo head centre (120, 170)
@@ -16,18 +18,21 @@ const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: r
 
 type CamState = "off" | "loading" | "on" | "error";
 
-function describeCameraError(err: unknown) {
+type CamError = "blocked" | "none" | "other";
+
+// The kind of failure, not its wording, so the message follows the language
+function cameraErrorKind(err: unknown): CamError {
   const name = err instanceof DOMException ? err.name : "";
-  if (name === "NotAllowedError" || name === "SecurityError")
-    return "Camera access was blocked. Allow it in your browser's site settings to try this.";
-  if (name === "NotFoundError" || name === "OverconstrainedError") return "No camera found on this device.";
-  return "Couldn't start face tracking on this device. The animated demo still works.";
+  if (name === "NotAllowedError" || name === "SecurityError") return "blocked";
+  if (name === "NotFoundError" || name === "OverconstrainedError") return "none";
+  return "other";
 }
 
 export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => void }) {
+  const d = useContent().home.demo;
   const [filter, setFilter] = useState<TemplateId>("gum");
   const [cam, setCam] = useState<CamState>("off");
-  const [camMsg, setCamMsg] = useState("");
+  const [camError, setCamError] = useState<CamError | null>(null);
   const [note, setNote] = useState<ArEvent | null>(null); // result of a filter (how big the bubble got)
   const [inView, setInView] = useState(true); // the demo pauses itself when scrolled out of view
   const rootRef = useRef<HTMLDivElement>(null);
@@ -39,6 +44,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointer = useRef({ x: 0, y: 0, t: 0 });
   const filterRef = useRef<TemplateId>("gum");
+  const labelsRef = useRef(d.hud); // read by the camera loop, so switching language updates the canvas text too
   const camOnRef = useRef(false);
   const stopLoopRef = useRef<(() => void) | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -47,6 +53,9 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
   useEffect(() => {
     filterRef.current = filter;
   }, [filter]);
+  useEffect(() => {
+    labelsRef.current = d.hud;
+  }, [d]);
   useEffect(() => {
     camOnRef.current = cam === "on";
   }, [cam]);
@@ -136,7 +145,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
     const runId = ++runIdRef.current;
     const cancelled = () => runIdRef.current !== runId;
     setCam("loading");
-    setCamMsg("");
+    setCamError(null);
     setNote(null);
     try {
       if (!navigator.mediaDevices?.getUserMedia) throw new Error("unsupported");
@@ -160,6 +169,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
         canvas: canvasRef.current!,
         landmarker,
         getTemplate: () => filterRef.current,
+        getLabels: () => labelsRef.current,
         onEvent: (e) => setNote(e.kind === "reset" ? null : e),
       });
       setCam("on");
@@ -167,7 +177,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       if (cancelled()) return;
       stopCamera();
       setCam("error");
-      setCamMsg(describeCameraError(err));
+      setCamError(cameraErrorKind(err));
     }
   };
 
@@ -183,10 +193,12 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
 
   const hint =
     cam === "on"
-      ? "Runs on your device. Your video never leaves this browser."
+      ? d.hintOn
       : cam === "error"
-        ? camMsg
-        : "On your device. Nothing uploaded.";
+        ? camError
+          ? d.errors[camError]
+          : ""
+        : d.hintOff;
 
   return (
     <div
@@ -197,7 +209,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       // the screen plus its frame), capped for big screens
       style={{ width: "clamp(180px, calc((100svh - 23rem) / 2.07), 268px)" }}
       role="group"
-      aria-label="Interactive AR template demo"
+      aria-label={d.group}
     >
       {/* Glow behind the phone */}
       <div
@@ -251,12 +263,12 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
             <video ref={videoRef} playsInline muted className="pointer-events-none absolute h-px w-px opacity-0" />
             <canvas
               ref={canvasRef}
-              aria-label="Live camera with the selected AR template"
+              aria-label={d.canvas}
               className={`absolute inset-0 h-full w-full rounded-[1.7rem] ${cam === "on" ? "" : "hidden"}`}
             />
             {cam === "loading" && (
               <div className="absolute inset-0 flex items-center justify-center rounded-[1.7rem] bg-black/70 px-6 text-center font-mono text-xs text-zinc-200">
-                Starting camera and loading face tracking…
+                {d.loading}
               </div>
             )}
 
@@ -272,7 +284,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
                 <path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" />
                 <circle cx="12" cy="13" r="3.5" />
               </svg>
-              {cam === "loading" ? "Cancel" : cam === "on" ? "Stop camera" : "Try the AR Experience"}
+              {cam === "loading" ? d.cancel : cam === "on" ? d.stop : d.start}
             </button>
             </div>
           </div>
@@ -287,7 +299,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       {/* Controls */}
       <div className="mt-6 flex flex-col items-center gap-2.5">
         {cam === "on" ? (
-          <div role="radiogroup" aria-label="AR filter" className="flex w-[260px] max-w-[92vw] gap-1.5">
+          <div role="radiogroup" aria-label={d.filterGroup} className="flex w-[260px] max-w-[92vw] gap-1.5">
             {FILTERS.map((t) => (
               <button
                 key={t.id}
@@ -306,7 +318,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
                 ].join(" ")}
               >
                 <span aria-hidden className="text-lg leading-none">{t.icon}</span>
-                <span className="text-[10px] font-medium">{t.label}</span>
+                <span className="text-[10px] font-medium">{d.filters[t.id]}</span>
               </button>
             ))}
           </div>
@@ -314,15 +326,17 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
 
         {note?.kind === "laser" && (
           <p className="text-center font-mono text-[11px] text-fuchsia-200" role="status">
-            Shots fired: {note.shots}
-            <span className="text-zinc-400"> · {Math.round(note.power * 100)}% charge</span>
+            {fill(d.laser, { shots: note.shots })}
+            <span className="text-zinc-400">{fill(d.laserCharge, { power: Math.round(note.power * 100) })}</span>
           </p>
         )}
         {note?.kind === "gum" && (
           <p className="text-center font-mono text-[11px] text-fuchsia-200" role="status">
-            {note.popped ? "POP! " : "Saved it: "}
-            {note.size.toFixed(1)}× your face
-            {note.best > note.size + 0.05 && <span className="text-zinc-400"> · best {note.best.toFixed(1)}×</span>}
+            {note.popped ? d.gumPop : d.gumSaved}
+            {fill(d.gumSize, { size: note.size.toFixed(1) })}
+            {note.best > note.size + 0.05 && (
+              <span className="text-zinc-400">{fill(d.gumBest, { best: note.best.toFixed(1) })}</span>
+            )}
           </p>
         )}
 

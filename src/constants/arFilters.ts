@@ -9,6 +9,9 @@ export type ARFilter = {
   poster: string; // /public/ar/<id>.jpg
 };
 
+/** The readable fields; other languages (src/i18n/ja/arFilters.ts) replace these and share the video and poster */
+export type ARFilterText = Pick<ARFilter, "title" | "blurb" | "tags" | "purpose" | "trigger">;
+
 // Written from what's visible in each recording. Edit titles and blurbs freely,
 // and add details only you know (brief, results, tools, your role on each).
 export const AR_FILTERS: ARFilter[] = [

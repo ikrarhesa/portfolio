@@ -2,12 +2,46 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import PerspectiveGrid from "./PerspectiveGrid";
 import { useTheme } from "../hooks/useTheme";
 import ThemeNudge from "./ThemeNudge";
+import { LANGS, useLang } from "../i18n";
 
 const NAV = [
-  { id: "work", label: "Work", href: "/#work" },
-  { id: "about", label: "About", href: "/#about" },
-  { id: "contact", label: "Contact", href: "/#contact" },
-];
+  { id: "work", key: "work", href: "/#work" },
+  { id: "about", key: "about", href: "/#about" },
+  { id: "contact", key: "contact", href: "/#contact" },
+] as const;
+
+/** EN | 日本語. A plain two-button group: the active one is underlined, nothing else changes in the header. */
+function LangSwitch() {
+  const { lang, setLang, t } = useLang();
+  return (
+    <div role="group" aria-label={t.shell.language.group} className="flex items-center text-xs font-medium">
+      {LANGS.map((l, i) => (
+        <React.Fragment key={l}>
+          {i > 0 && (
+            <span aria-hidden className="select-none text-zinc-600">
+              |
+            </span>
+          )}
+          <button
+            type="button"
+            lang={l}
+            aria-pressed={lang === l}
+            aria-label={t.shell.language[l]}
+            onClick={() => setLang(l)}
+            className={[
+              "whitespace-nowrap rounded px-1 py-1.5 transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400 sm:px-1.5",
+              lang === l
+                ? "text-zinc-50 underline decoration-fuchsia-400 decoration-2 underline-offset-[5px]"
+                : "text-zinc-400 hover:text-zinc-100",
+            ].join(" ")}
+          >
+            {l === "en" ? "EN" : "日本語"}
+          </button>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
 
 type ShellLayoutProps = {
   children: React.ReactNode;
@@ -17,6 +51,7 @@ type ShellLayoutProps = {
 
 function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
   const [theme, toggleTheme] = useTheme();
+  const { lang, t } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -75,7 +110,7 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
     window.addEventListener("resize", place);
     document.fonts?.ready.then(place);
     return () => window.removeEventListener("resize", place);
-  }, [active]);
+  }, [active, lang]); // the links change width with the language
 
   return (
     <div className="min-h-screen text-zinc-200 relative">
@@ -97,13 +132,13 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
       >
         <div
           className={[
-            "mx-auto max-w-5xl px-5 flex items-center justify-between gap-4 transition-[height] duration-300",
+            "mx-auto max-w-5xl px-4 sm:px-5 flex items-center justify-between gap-2 sm:gap-4 transition-[height] duration-300",
             scrolled ? "h-12" : "h-16",
           ].join(" ")}
         >
           <a
             href="/"
-            className="group font-semibold text-zinc-100 tracking-tight focus-visible:outline-2 focus-visible:outline-fuchsia-400 rounded"
+            className="group whitespace-nowrap font-semibold text-zinc-100 tracking-tight focus-visible:outline-2 focus-visible:outline-fuchsia-400 rounded"
           >
             Hesa
             <span className="text-fuchsia-400 inline-block transition-transform duration-300 group-hover:scale-150 motion-safe:animate-pulse">
@@ -111,7 +146,7 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
             </span>
           </a>
 
-          <nav ref={navRef} className="relative flex items-center text-sm" aria-label="Primary">
+          <nav ref={navRef} className="relative flex items-center text-sm" aria-label={t.shell.nav.primary}>
             <span
               ref={pillRef}
               aria-hidden
@@ -126,25 +161,26 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
                 href={n.href}
                 aria-current={active === n.id ? "true" : undefined}
                 className={[
-                  "relative px-3 py-1.5 rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400",
+                  "relative whitespace-nowrap px-2 py-1.5 rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-fuchsia-400 sm:px-3",
                   active === n.id ? "text-zinc-50" : "text-zinc-400 hover:text-zinc-100",
                 ].join(" ")}
               >
-                {n.label}
+                {t.shell.nav[n.key]}
               </a>
             ))}
           </nav>
 
           {/* Right-hand cluster: the toggle belongs beside the status pill, not adrift mid-header */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-3">
+            <LangSwitch />
             {/* The bubble is anchored to the toggle, so its tail points at the right thing */}
             <span className="relative inline-flex">
             <ThemeNudge theme={theme} onAccept={toggleTheme} />
           <button
             type="button"
             onClick={toggleTheme}
-            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-            title={theme === "dark" ? "Light theme" : "Dark theme"}
+            aria-label={theme === "dark" ? t.shell.theme.toLight : t.shell.theme.toDark}
+            title={theme === "dark" ? t.shell.theme.lightTitle : t.shell.theme.darkTitle}
             className="inline-flex size-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100 focus-visible:outline-2 focus-visible:outline-fuchsia-400"
           >
             {theme === "dark" ? (
@@ -168,7 +204,7 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
               <span className="absolute inline-flex size-full rounded-full bg-emerald-400 opacity-60 motion-safe:animate-ping" />
               <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
             </span>
-            Available for work
+            {t.shell.availableForWork}
           </a>
           </div>
         </div>

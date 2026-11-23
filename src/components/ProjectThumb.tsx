@@ -1,14 +1,16 @@
 import type { Mission } from "../constants/missions";
 import LoopVideo from "./LoopVideo";
+import { fill, useContent } from "../i18n";
 
 /** Three looping phone clips, staggered, for projects that have AR/video footage */
 function ClipCollage({ mission, className }: { mission: Mission; className: string }) {
+  const t = useContent();
   const clips = mission.cover ?? [];
   return (
     <div
       className={`relative flex items-center justify-center gap-[3%] overflow-hidden bg-gradient-to-br from-[#2a1238] via-[#140a1f] to-[#07060b] ${className}`}
       role="img"
-      aria-label={`${mission.title}: looping previews of AR filters`}
+      aria-label={fill(t.project.thumb.previews, { title: mission.title })}
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-70"
@@ -34,6 +36,7 @@ function ClipCollage({ mission, className }: { mission: Mission; className: stri
 }
 
 export default function ProjectThumb({ mission, className = "" }: { mission: Mission; className?: string }) {
+  const t = useContent();
   if (mission.cover?.length) return <ClipCollage mission={mission} className={className} />;
   if (mission.image) {
     const contain = mission.imageFit === "contain";
@@ -41,7 +44,7 @@ export default function ProjectThumb({ mission, className = "" }: { mission: Mis
       <div className={`overflow-hidden bg-gradient-to-br from-[#1a0f24] to-[#07060b] ${className}`}>
         <img
           src={mission.image}
-          alt={`${mission.title} screenshot`}
+          alt={fill(t.project.thumb.screenshot, { title: mission.title })}
           loading="lazy"
           className={`h-full w-full ${contain ? "object-contain p-4" : "object-cover object-top"}`}
         />
@@ -52,7 +55,7 @@ export default function ProjectThumb({ mission, className = "" }: { mission: Mis
   return (
     <div
       role="img"
-      aria-label={`${mission.title} preview coming soon`}
+      aria-label={fill(t.project.thumb.soon, { title: mission.title })}
       className={`bg-gradient-to-br from-[#1a0f24] to-[#07060b] ${className}`}
     />
   );

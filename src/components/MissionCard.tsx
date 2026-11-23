@@ -1,8 +1,10 @@
 import { useRef } from "react";
 import { projectHref, type Mission } from "../constants/missions";
 import ProjectThumb from "./ProjectThumb";
+import { useContent } from "../i18n";
 
 export default function MissionCard({ mission, featured }: { mission: Mission; featured: boolean }) {
+  const t = useContent();
   const cardRef = useRef<HTMLElement>(null);
 
   // The pointer is measured on the still wrapper, not on the tilting card, so the tilt can't feed back into itself
@@ -58,7 +60,7 @@ export default function MissionCard({ mission, featured }: { mission: Mission; f
           {/* Looks like a button; the stretched title link above is the real (single) tab stop */}
           <div className="mt-auto pt-6">
             <span className="inline-flex items-center gap-2 rounded-xl bg-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(217,70,239,0.3)] transition-colors group-hover:bg-fuchsia-400 group-focus-within:bg-fuchsia-400">
-              View case study
+              {t.home.work.viewCase}
               <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
             </span>
           </div>

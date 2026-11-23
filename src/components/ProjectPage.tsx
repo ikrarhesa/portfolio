@@ -1,6 +1,6 @@
-import { MISSIONS, projectHref, type Mission, type StoryVisual } from "../constants/missions";
+import { projectHref, type Mission, type StoryVisual } from "../constants/missions";
 import { CONTACT } from "../constants/contact";
-import { AR_FILTERS } from "../constants/arFilters";
+import { fill, useArFilters, useContent, useMissions } from "../i18n";
 import Label from "./Label";
 import ProjectThumb from "./ProjectThumb";
 import FilterVideo from "./FilterVideo";
@@ -8,18 +8,22 @@ import TanaCaseStudy from "./TanaCaseStudy";
 import TemplateCaseStudy from "./TemplateCaseStudy";
 
 export default function ProjectPage({ mission }: { mission: Mission }) {
+  const t = useContent();
+  const p = t.project;
+  const missions = useMissions();
+  const filters = useArFilters();
   if (mission.id === "tana") return <TanaCaseStudy mission={mission} />;
   if (mission.id === "template") return <TemplateCaseStudy mission={mission} />;
 
-  const index = MISSIONS.findIndex((m) => m.id === mission.id);
-  const next = MISSIONS[(index + 1) % MISSIONS.length];
+  const index = missions.findIndex((m) => m.id === mission.id);
+  const next = missions[(index + 1) % missions.length];
 
   const meta = [
-    ["Role", mission.role],
-    ["Focus", mission.focus],
-    ["Surface", mission.surface],
-    ["Status", mission.status],
-    ["Year", mission.year],
+    [p.meta.role, mission.role],
+    [p.meta.focus, mission.focus],
+    [p.meta.surface, mission.surface],
+    [p.meta.status, mission.status],
+    [p.meta.year, mission.year],
   ];
 
   return (
@@ -28,11 +32,11 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
         href="/#work"
         className="inline-flex items-center gap-2 rounded py-2 text-sm text-zinc-400 hover:text-zinc-100 focus-visible:outline-2 focus-visible:outline-fuchsia-400"
       >
-        <span aria-hidden>←</span> All work
+        <span aria-hidden>←</span> {t.shell.common.allWork}
       </a>
 
       <header className="mt-8">
-        <Label>Case study · {mission.status}</Label>
+        <Label>{fill(p.caseStudy, { status: mission.status })}</Label>
         <h1 className="mt-3 max-w-3xl text-3xl font-bold leading-tight tracking-tight text-zinc-50 md:text-5xl">
           {mission.title}
         </h1>
@@ -47,7 +51,7 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
             <img
               key={src}
               src={src}
-              alt={`${mission.title} screenshot ${i + 2}`}
+              alt={fill(p.screenshotAlt, { title: mission.title, n: i + 2 })}
               loading="lazy"
               className="w-full rounded-xl border border-white/10 bg-black/40 object-contain"
             />
@@ -83,9 +87,9 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
       {mission.moves && mission.moves.length > 0 && (
         <section className="mt-14 grid gap-6 md:grid-cols-[1fr_2fr] md:gap-10" aria-labelledby="moves-heading">
           <div>
-            <Label>What I did</Label>
+            <Label>{p.moves.label}</Label>
             <h2 id="moves-heading" className="mt-2 text-xl font-semibold text-zinc-50">
-              {mission.moves.length} moves
+              {fill(p.moves.heading, { n: mission.moves.length })}
             </h2>
             {mission.movesIntro && <p className="mt-3 text-sm leading-relaxed text-zinc-400">{mission.movesIntro}</p>}
           </div>
@@ -98,7 +102,7 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
                 >
                   <div>
                     <p className="font-mono text-xs uppercase tracking-widest text-fuchsia-300">
-                      Move {String(i + 1).padStart(2, "0")}
+                      {fill(p.moves.move, { n: String(i + 1).padStart(2, "0") })}
                     </p>
                     <h3 className="mt-2 text-lg font-semibold tracking-tight text-zinc-50">{m.title}</h3>
                     <div className="mt-3 space-y-3 text-base leading-relaxed text-zinc-300">
@@ -145,32 +149,32 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
       {/* AR filters, as evidence */}
       {mission.showArFilters && (
         <section className="mt-20" aria-labelledby="ar-filters-heading">
-          <Label>The work</Label>
+          <Label>{p.filters.label}</Label>
           <h2 id="ar-filters-heading" className="mt-3 text-2xl font-semibold tracking-tight text-zinc-50">
-            Effects I designed
+            {p.filters.heading}
           </h2>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-zinc-300">
-            Three effects from the library: one for selling, two made for local users. Screen recordings, looping while on screen. A tap pauses or plays.
+            {p.filters.intro}
           </p>
           <div className="mt-10 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-            {AR_FILTERS.map((f, i) => (
+            {filters.map((f, i) => (
               <figure key={f.id} className="w-full max-w-[260px]">
                 <FilterVideo src={f.video} poster={f.poster} title={f.title} />
                 <figcaption className="mt-5">
                   <p className="font-mono text-xs uppercase tracking-widest text-fuchsia-300">
-                    Filter {String(i + 1).padStart(2, "0")}
+                    {fill(p.filters.filter, { n: String(i + 1).padStart(2, "0") })}
                   </p>
                   <h3 className="mt-2 text-lg font-semibold tracking-tight text-zinc-50">{f.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-zinc-400">{f.blurb}</p>
                   <dl className="mt-3 space-y-1.5 text-xs">
                     {f.purpose && (
                       <div className="flex gap-2">
-                        <dt className="w-14 shrink-0 font-mono uppercase tracking-widest text-zinc-500">Why</dt>
+                        <dt className="w-14 shrink-0 font-mono uppercase tracking-widest text-zinc-500">{p.filters.why}</dt>
                         <dd className="text-zinc-300">{f.purpose}</dd>
                       </div>
                     )}
                     <div className="flex gap-2">
-                      <dt className="w-14 shrink-0 font-mono uppercase tracking-widest text-zinc-500">Trigger</dt>
+                      <dt className="w-14 shrink-0 font-mono uppercase tracking-widest text-zinc-500">{p.filters.trigger}</dt>
                       <dd className="text-zinc-300">{f.trigger}</dd>
                     </div>
                   </dl>
@@ -191,7 +195,7 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
       {/* Results */}
       {mission.results && mission.results.length > 0 && (
         <section className="mt-20 grid gap-4 md:grid-cols-[1fr_2fr] md:gap-10">
-          <h2 className="text-xl font-semibold text-zinc-50">Results</h2>
+          <h2 className="text-xl font-semibold text-zinc-50">{p.results}</h2>
           <div>
             <dl className="grid gap-8 sm:grid-cols-2">
               {mission.results.map((r) => (
@@ -217,7 +221,7 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
 
       {mission.learnings && mission.learnings.length > 0 && (
         <section className="mt-20 grid gap-4 md:grid-cols-[1fr_2fr] md:gap-10">
-          <h2 className="text-xl font-semibold text-zinc-50">What I learned</h2>
+          <h2 className="text-xl font-semibold text-zinc-50">{p.learned}</h2>
           <ul className="space-y-4 text-base leading-relaxed text-zinc-300">
             {mission.learnings.map((l) => (
               <li key={l} className="flex gap-3">
@@ -230,7 +234,7 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
       )}
 
       <section className="mt-16 border-t border-white/10 pt-10">
-        <h2 className="font-mono text-xs uppercase tracking-widest text-zinc-500">Tools &amp; skills</h2>
+        <h2 className="font-mono text-xs uppercase tracking-widest text-zinc-500">{t.shell.common.toolsSkills}</h2>
         <div className="mt-4 flex flex-wrap gap-2">
           {mission.stack.map((t) => (
             <span key={t} className="rounded-md border border-white/10 px-2.5 py-1 text-sm text-zinc-300">
@@ -241,9 +245,9 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
       </section>
 
       <section className="mt-12 rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
-        <h2 className="text-2xl font-semibold tracking-tight text-zinc-50">Want to talk about this work?</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-zinc-50">{t.shell.common.wantToTalk}</h2>
         <p className="mt-2 max-w-xl text-base leading-relaxed text-zinc-300">
-          I'm happy to go deeper on the decisions, the trade-offs or the numbers.
+          {p.talkBody}
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
           {CONTACT.email && (
@@ -251,24 +255,24 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
               href={`mailto:${CONTACT.email}`}
               className="rounded-xl bg-fuchsia-500 px-5 py-3 text-sm font-semibold text-white hover:bg-fuchsia-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
             >
-              Get in touch
+              {t.shell.common.getInTouch}
             </a>
           )}
           <a
             href="/#work"
             className="inline-block rounded py-2 text-sm text-zinc-300 underline decoration-zinc-600 underline-offset-4 hover:text-white hover:decoration-fuchsia-300 focus-visible:outline-2 focus-visible:outline-fuchsia-400"
           >
-            ← All work
+            ← {t.shell.common.allWork}
           </a>
         </div>
       </section>
 
-      {MISSIONS.length > 1 && (
+      {missions.length > 1 && (
         <a
           href={projectHref(next.id)}
           className="mt-8 block rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-fuchsia-400/50 focus-visible:outline-2 focus-visible:outline-fuchsia-400"
         >
-          <p className="font-mono text-xs uppercase tracking-widest text-zinc-500">Next project</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-zinc-500">{t.shell.common.nextProject}</p>
           <p className="mt-2 flex items-center justify-between gap-4 text-xl font-semibold text-zinc-50">
             {next.title}
             <span aria-hidden className="text-fuchsia-300">→</span>

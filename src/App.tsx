@@ -4,7 +4,7 @@ import IntroLoader from "./components/IntroLoader";
 import SiteFooter from "./components/SiteFooter";
 import SpaceInvaderModal from "./components/SpaceInvaderModal";
 import { CONTACT } from "./constants/contact";
-import { MISSIONS } from "./constants/missions";
+import { fill, useContent, useLang, useMissions } from "./i18n";
 import Label from "./components/Label";
 import MissionCard from "./components/MissionCard";
 import ProjectPage from "./components/ProjectPage";
@@ -36,9 +36,10 @@ function shouldPlayIntro() {
   }
 }
 
-const PROOF: { from?: number; to: number; prefix?: string; suffix: string; label: string }[] = [
-  { from: 30, to: 500, prefix: "", suffix: "", label: "videos a week using AR effects in Indonesia after the library refresh, up from 30" },
-  { to: 6, suffix: "+", label: "years across design, motion and digital marketing" },
+// The numbers are the same in every language; the labels come from the content files (home.proof, same order)
+const PROOF: { from?: number; to: number; prefix?: string; suffix: string }[] = [
+  { from: 30, to: 500, prefix: "", suffix: "" },
+  { to: 6, suffix: "+" },
 ];
 
 // Staggered entrance delay for the hero (see .rise in index.css)
@@ -46,12 +47,6 @@ const delay = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
 
 const LINK =
   "text-fuchsia-300 underline decoration-fuchsia-300/40 underline-offset-4 transition-colors hover:text-fuchsia-200 hover:decoration-fuchsia-200 focus-visible:outline-2 focus-visible:outline-fuchsia-400 rounded-sm";
-
-const PRINCIPLES = [
-  ["Clarity over cleverness", "Keep the UX plain. Save the cleverness for interaction details."],
-  ["Systems thinking", "Design how components, journeys and metrics connect."],
-  ["Honest communication", "Show trade-offs, not just glossy outcomes."],
-];
 
 // Real paths: "/" is home and "/work/<id>" is a case study. Each one is also pre-rendered to its own HTML file.
 const ROUTE_RE = /^\/work\/([\w-]+)\/?$/;
@@ -71,7 +66,11 @@ function App({ initialPath }: { initialPath?: string }) {
   const [isSpaceInvaderModalOpen, setIsSpaceInvaderModalOpen] = useState(false);
   const [path, setPath] = useState(() => initialPath ?? window.location.pathname);
   const [navKey, setNavKey] = useState(0); // bumps on every in-app link click, so "/#about" re-scrolls
-  const project = MISSIONS.find((m) => m.id === getProjectId(path)) ?? null;
+  const { lang } = useLang();
+  const t = useContent();
+  const missions = useMissions();
+  const project = missions.find((m) => m.id === getProjectId(path)) ?? null;
+  const projectId = project?.id ?? null;
 
   // The page is hidden until React mounts when the intro is about to play (see index.html)
   useEffect(() => {
@@ -127,18 +126,33 @@ function App({ initialPath }: { initialPath?: string }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [showLoader]);
 
+  // The title and description follow the page and the language. This is separate from the scroll effect below,
+  // so switching language never moves the page.
+  const pageTitle = project ? fill(t.shell.meta.projectTitle, { title: project.title }) : t.shell.meta.homeTitle;
+  const pageDescription = project ? project.summary : t.shell.meta.homeDescription;
+  useEffect(() => {
+    if (showLoader) return;
+    document.title = pageTitle;
+    const set = (selector: string, value: string) =>
+      document.head.querySelector(selector)?.setAttribute("content", value);
+    set('meta[name="description"]', pageDescription);
+    set('meta[property="og:title"]', pageTitle);
+    set('meta[property="og:description"]', pageDescription);
+    set('meta[name="twitter:title"]', pageTitle);
+    set('meta[name="twitter:description"]', pageDescription);
+    set('meta[property="og:locale"]', lang === "ja" ? "ja_JP" : "en_US");
+  }, [showLoader, pageTitle, pageDescription, lang]);
+
   // After a route change: project pages start at the top; home scrolls to its "#section"
   useEffect(() => {
     if (showLoader) return;
     const root = document.documentElement;
-    if (project) {
+    if (projectId) {
       root.style.scrollBehavior = "auto";
       window.scrollTo(0, 0);
       root.style.scrollBehavior = "";
-      document.title = `${project.title} · Ikrar Hesa Prasetya`;
       return;
     }
-    document.title = "Ikrar Hesa Prasetya · Product Designer | Creative Tools & Systems";
     const id = window.location.hash.slice(1);
     if (id) {
       requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
@@ -147,7 +161,7 @@ function App({ initialPath }: { initialPath?: string }) {
       window.scrollTo(0, 0); // arrived through a link to "/" (the logo)
       root.style.scrollBehavior = "";
     }
-  }, [project, showLoader, navKey]);
+  }, [projectId, showLoader, navKey]);
 
   const handleReveal = () => {
     setIntro("leaving");
@@ -173,31 +187,32 @@ function App({ initialPath }: { initialPath?: string }) {
           <div className="grid min-h-[calc(100svh-4rem-6.5rem)] items-center gap-10 py-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
             <div>
               <div className="rise" style={delay(0)}>
-                <Label>Ikrar Hesa Prasetya · Jakarta</Label>
+                <Label>{t.home.hero.label}</Label>
               </div>
               <h1
                 className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 md:text-6xl"
                 style={delay(120)}
               >
-                Designer of digital products and <span className="shimmer-text">creative systems</span>.
+                {t.home.hero.headline.before}
+                <span className="shimmer-text">{t.home.hero.headline.emphasis}</span>
+                {t.home.hero.headline.after}
               </h1>
               <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-zinc-300" style={delay(260)}>
-                I design experiences and tools that help people communicate, create and sell. Currently designing at
-                Shopee, working on creative tools used by millions across Southeast Asia.
+                {t.home.hero.intro}
               </p>
               <div className="rise mt-8 flex flex-wrap gap-3" style={delay(400)}>
                 <a
                   href="/#work"
                   className="group inline-flex items-center gap-2 rounded-xl bg-fuchsia-500 px-7 py-4 text-base font-semibold text-white shadow-[0_8px_30px_rgba(217,70,239,0.35)] transition-colors hover:bg-fuchsia-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
                 >
-                  See selected work
+                  {t.home.hero.ctaWork}
                   <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
                 </a>
                 <a
                   href="/#contact"
                   className="inline-flex items-center rounded-xl px-4 py-4 max-sm:px-0 text-sm font-medium text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white hover:decoration-fuchsia-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
                 >
-                  Get in touch
+                  {t.home.hero.ctaContact}
                 </a>
               </div>
             </div>
@@ -208,12 +223,12 @@ function App({ initialPath }: { initialPath?: string }) {
           </div>
 
           <dl className="rise grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-8 md:grid-cols-2" style={delay(560)}>
-            {PROOF.map((p) => (
-              <div key={p.label}>
+            {PROOF.map((p, i) => (
+              <div key={i}>
                 <dt className="text-4xl font-bold tracking-tight text-zinc-50">
                   <CountUp from={p.from} to={p.to} prefix={p.prefix} suffix={p.suffix} delay={700} />
                 </dt>
-                <dd className="mt-2 text-sm leading-snug text-zinc-400">{p.label}</dd>
+                <dd className="mt-2 text-sm leading-snug text-zinc-400">{t.home.proof[i].label}</dd>
               </div>
             ))}
           </dl>
@@ -221,10 +236,10 @@ function App({ initialPath }: { initialPath?: string }) {
 
         {/* Work */}
         <section id="work" className="scroll-mt-20 py-14 md:py-20">
-          <Label>Selected work</Label>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">Selected case studies</h2>
+          <Label>{t.home.work.label}</Label>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">{t.home.work.heading}</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {MISSIONS.map((m, i) => (
+            {missions.map((m, i) => (
               <MissionCard key={m.id} mission={m} featured={i === 0} />
             ))}
           </div>
@@ -237,7 +252,7 @@ function App({ initialPath }: { initialPath?: string }) {
               <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] shadow-[0_0_60px_rgba(217,70,239,0.12)]">
                 <img
                   src="/about.jpg"
-                  alt="Ikrar Hesa Prasetya standing beside an Apollo 11 poster outside the Smithsonian National Air and Space Museum"
+                  alt={t.home.about.photoAlt}
                   width={840}
                   height={1118}
                   loading="lazy"
@@ -252,42 +267,35 @@ function App({ initialPath }: { initialPath?: string }) {
             </figure>
 
             <div>
-              <Label>About</Label>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">A little about me</h2>
+              <Label>{t.home.about.label}</Label>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">{t.home.about.heading}</h2>
 
               <div className="mt-6 space-y-5 text-base leading-relaxed text-zinc-300">
                 <p className="text-lg text-zinc-200">
-                  I'm a multi-disciplinary designer with over 6 years of experience across product, brand and motion,
-                  based in Jakarta. Currently at{" "}
+                  {t.home.about.p1.before}
                   <a href="https://shopee.co.id/" target="_blank" rel="noreferrer" className={LINK}>
-                    Shopee
+                    {t.home.about.p1.link}
                   </a>
-                  , designing creative tools and experiences, including AR, at one of Southeast Asia's leading
-                  e-commerce platforms, used by millions of people.
+                  {t.home.about.p1.after}
                 </p>
+                <p>{t.home.about.p2}</p>
                 <p>
-                  I am driven by curiosity and my mission to design empathetic products that balance user experience and
-                  business impact.
-                </p>
-                <p>
-                  Before Shopee, I worked as a Creative Marketing Associate at{" "}
+                  {t.home.about.p3.before}
                   <a href="https://danacita.co.id/" target="_blank" rel="noreferrer" className={LINK}>
-                    Danacita
+                    {t.home.about.p3.link}
                   </a>
-                  , where I helped schools, universities, bootcamps and students access a more affordable education
-                  through Danacita's products and services. I also helped bring those products to market and grow
-                  Danacita's design team.
+                  {t.home.about.p3.after}
                 </p>
-                <p>In my downtime, I enjoy exploring new destinations with my trusty camera.</p>
+                <p>{t.home.about.p4}</p>
               </div>
 
               <div className="mt-12 border-t border-white/10 pt-8">
-                <Label>How I work</Label>
+                <Label>{t.home.about.how}</Label>
                 <ul className="mt-5 grid gap-6 sm:grid-cols-3">
-                  {PRINCIPLES.map(([t, d]) => (
-                    <li key={t}>
-                      <p className="font-semibold text-zinc-100">{t}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-zinc-400">{d}</p>
+                  {t.home.about.principles.map(([title, body]) => (
+                    <li key={title}>
+                      <p className="font-semibold text-zinc-100">{title}</p>
+                      <p className="mt-1 text-sm leading-relaxed text-zinc-400">{body}</p>
                     </li>
                   ))}
                 </ul>
@@ -298,12 +306,9 @@ function App({ initialPath }: { initialPath?: string }) {
 
         {/* Contact */}
         <section id="contact" className="scroll-mt-20 border-t border-white/10 py-14 md:py-20">
-          <Label>Contact</Label>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50 md:text-4xl">Let's work together</h2>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-300">
-            Open to product design roles and collaborations. Typical reply within a couple of days. If it's urgent,
-            say so in the subject line.
-          </p>
+          <Label>{t.home.contact.label}</Label>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50 md:text-4xl">{t.home.contact.heading}</h2>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-300">{t.home.contact.body}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             {CONTACT.email && (
               <a
@@ -320,7 +325,7 @@ function App({ initialPath }: { initialPath?: string }) {
                 rel="noreferrer"
                 className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
               >
-                LinkedIn
+                {t.home.contact.linkedin}
               </a>
             )}
             {CONTACT.cv && (
@@ -329,7 +334,7 @@ function App({ initialPath }: { initialPath?: string }) {
                 download
                 className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
               >
-                Download CV
+                {t.home.contact.cv}
               </a>
             )}
           </div>

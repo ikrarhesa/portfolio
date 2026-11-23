@@ -28,9 +28,23 @@
         }
       })();
     </script>
+    <!-- Mirror of readLang() in src/i18n: a stored or ?lang=ja choice sets <html lang> straight away and hides the
+         English pre-rendered page until React mounts in Japanese (same 3s safety net as above). -->
+    <script>
+      (function () {
+        try {
+          var m = /[?&]lang=(ja|en)(&|$)/.exec(location.search);
+          var l = m ? m[1] : localStorage.getItem("hesa_lang");
+          if (l === "ja") {
+            document.documentElement.lang = "ja";
+            document.documentElement.classList.add("lang-pending");
+          }
+        } catch (e) {}
+      })();
+    </script>
     <style>
       @keyframes intro-unhide { to { visibility: visible; } }
-      .intro-pending #root { visibility: hidden; animation: intro-unhide 0s 3s forwards; }
+      .intro-pending #root, .lang-pending #root { visibility: hidden; animation: intro-unhide 0s 3s forwards; }
     </style>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -42,6 +56,7 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Ikrar Hesa Prasetya" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Ikrar Hesa Prasetya · Product Designer | Creative Tools &amp; Systems" />
     <meta property="og:description" content="Designer of digital products and creative systems, currently at Shopee. Selected work, background and contact." />
     <meta property="og:url" content="https://ikrarhesa.com/" />

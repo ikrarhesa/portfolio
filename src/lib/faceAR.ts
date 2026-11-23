@@ -1,7 +1,10 @@
 import type { FaceLandmarker, NormalizedLandmark } from "@mediapipe/tasks-vision";
-import { createFilter, type ArEvent, type ArFilter, type TemplateId } from "./arFilters";
+import { createFilter, type ArEvent, type ArFilter, type ArLabels, type TemplateId } from "./arFilters";
 
-export type { ArEvent, TemplateId } from "./arFilters";
+export type { ArEvent, ArLabels, TemplateId } from "./arFilters";
+
+/** Everything written on the camera canvas */
+export type HudLabels = ArLabels & { looking: string; live: string };
 
 // Face tracking runs entirely in the visitor's browser. The ~4MB model file is served from this
 // site (public/mediapipe) and the library's WASM comes from jsDelivr; no video frames ever leave the device.
@@ -56,11 +59,12 @@ type RunOptions = {
   canvas: HTMLCanvasElement;
   landmarker: FaceLandmarker;
   getTemplate: () => TemplateId;
+  getLabels: () => HudLabels;
   onEvent?: (e: ArEvent) => void;
 };
 
 /** Starts the draw + detect loop. Returns a stop function. */
-export function runFaceAR({ video, canvas, landmarker, getTemplate, onEvent }: RunOptions) {
+export function runFaceAR({ video, canvas, landmarker, getTemplate, getLabels, onEvent }: RunOptions) {
   const ctx = canvas.getContext("2d")!;
   const off = document.createElement("canvas");
   const offCtx = off.getContext("2d")!;
@@ -111,7 +115,7 @@ export function runFaceAR({ video, canvas, landmarker, getTemplate, onEvent }: R
     const wanted = getTemplate();
     if (wanted !== templateId) {
       templateId = wanted;
-      filter = createFilter(wanted);
+      filter = createFilter(wanted, getLabels);
       emit({ kind: "reset" });
     }
 
@@ -217,7 +221,7 @@ export function runFaceAR({ video, canvas, landmarker, getTemplate, onEvent }: R
         emit,
       });
     }
-    drawHud(ctx, W, H, filter?.hint() ?? "", !!landmarks);
+    drawHud(ctx, W, H, filter?.hint() ?? "", !!landmarks, getLabels());
   };
   raf = requestAnimationFrame(loop);
 
@@ -227,17 +231,17 @@ export function runFaceAR({ video, canvas, landmarker, getTemplate, onEvent }: R
   };
 }
 
-function drawHud(ctx: CanvasRenderingContext2D, W: number, H: number, hint: string, tracking: boolean) {
+function drawHud(ctx: CanvasRenderingContext2D, W: number, H: number, hint: string, tracking: boolean, labels: HudLabels) {
   ctx.textBaseline = "alphabetic";
   ctx.textAlign = "center";
-  ctx.font = "600 11px ui-monospace, SFMono-Regular, monospace";
+  ctx.font = "600 11px ui-monospace, SFMono-Regular, monospace, \"Hiragino Sans\", \"Yu Gothic UI\", \"Noto Sans JP\", sans-serif";
   ctx.fillStyle = "rgba(0,0,0,0.55)";
   ctx.shadowColor = "rgba(0,0,0,0.8)";
   ctx.shadowBlur = 6;
   ctx.fillStyle = "#ffffff";
-  ctx.fillText(tracking ? hint : "LOOKING FOR A FACE…", W / 2, H - 28);
-  ctx.font = "500 9px ui-monospace, SFMono-Regular, monospace";
+  ctx.fillText(tracking ? hint : labels.looking, W / 2, H - 28);
+  ctx.font = "500 9px ui-monospace, SFMono-Regular, monospace, \"Hiragino Sans\", \"Yu Gothic UI\", \"Noto Sans JP\", sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.7)";
-  ctx.fillText("LIVE · ON YOUR DEVICE", W / 2, H - 14);
+  ctx.fillText(labels.live, W / 2, H - 14);
   ctx.shadowBlur = 0;
 }

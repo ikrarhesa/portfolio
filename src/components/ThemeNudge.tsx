@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useContent } from "../i18n";
 
 /**
  * A comic-book speech bubble that points at the theme toggle and invites people into dark mode.
@@ -26,6 +27,7 @@ function shouldNudge() {
 }
 
 export default function ThemeNudge({ theme, onAccept }: { theme: "light" | "dark"; onAccept: () => void }) {
+  const t = useContent();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -61,14 +63,14 @@ export default function ThemeNudge({ theme, onAccept }: { theme: "light" | "dark
     <button
       type="button"
       className="theme-nudge"
-      aria-label="Bored? Try the dark theme"
+      aria-label={t.shell.nudge.aria}
       onClick={() => {
         setShow(false);
         onAccept();
       }}
     >
-      <span className="theme-nudge-big">Bored?</span>
-      <span className="theme-nudge-small">Have a look →</span>
+      <span className="theme-nudge-big">{t.shell.nudge.big}</span>
+      <span className="theme-nudge-small">{t.shell.nudge.small}</span>
     </button>
   );
 }

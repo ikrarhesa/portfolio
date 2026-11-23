@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { SPRITES } from "../constants/spaceInvaders";
 import CountUp from "./CountUp";
 import HoloSprite from "./HoloSprite";
+import { useContent } from "../i18n";
 
 /**
  * The first-visit intro: a Jarvis-style hologram projected from a platform.
@@ -74,6 +75,7 @@ function HudRings() {
 }
 
 export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void; onDone: () => void }) {
+  const t = useContent();
   const rootRef = useRef<HTMLDivElement>(null);
   const finished = useRef(false);
   // A different hologram each time the intro plays. The read is pure, the write is in an effect.
@@ -122,14 +124,14 @@ export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void
     return () => window.removeEventListener("keydown", onKey);
   }, [finish]);
 
-  const words = ["Hi,", "I'm"];
+  const { words, sep, name, after } = t.shell.intro;
 
   return (
     <div
       ref={rootRef}
       role="status"
       aria-live="polite"
-      aria-label="Loading Ikrar Hesa Prasetya's portfolio"
+      aria-label={t.shell.intro.loading}
       onClick={finish}
       className="fixed inset-0 z-50 flex cursor-pointer flex-col items-center justify-center overflow-hidden bg-[#0a0512] px-6"
     >
@@ -229,15 +231,17 @@ export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void
         <div role="presentation" className="mt-4 text-4xl font-bold tracking-tight text-[#ffffff] md:text-5xl">
           {words.map((w, i) => (
             <span key={w} className="intro-word inline-block" style={css({ animationDelay: `${1.5 + i * 0.12}s` })}>
-              {w}&nbsp;
+              {w}
+              {sep}
             </span>
           ))}
-          <span className="intro-word inline-block" style={css({ animationDelay: "1.76s" })}>
-            <span className="shimmer-cyan">Hesa.</span>
+          <span className="intro-word inline-block" style={css({ animationDelay: `${1.5 + words.length * 0.12}s` })}>
+            <span className="shimmer-cyan">{name}</span>
+            {after}
           </span>
         </div>
         <p className="intro-sub mt-3 text-base text-[#a1a1aa] md:text-lg" style={css({ animationDelay: "2s" })}>
-          I design digital products and creative systems.
+          {t.shell.intro.sub}
         </p>
       </div>
 
@@ -249,7 +253,7 @@ export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void
         }}
         className="intro-skip absolute bottom-6 right-6 rounded-full border border-fuchsia-300/25 bg-fuchsia-300/[0.04] px-4 py-2 font-mono text-xs text-fuchsia-100/70 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-fuchsia-300"
       >
-        Skip <span aria-hidden>↵</span>
+        {t.shell.intro.skip} <span aria-hidden>↵</span>
       </button>
     </div>
   );

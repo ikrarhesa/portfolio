@@ -9,6 +9,14 @@ export type ArEvent =
   | { kind: "laser"; shots: number; power: number }
   | { kind: "reset" };
 
+/** The words the filters put on the canvas, as a getter so they follow the language while the camera runs */
+export type ArLabels = Record<
+  | "gumPop" | "gumBank" | "gumCareful" | "gumKeep" | "gumStart"
+  | "laserFire" | "laserCool" | "laserBlink" | "laserCharging" | "laserStart",
+  string
+>;
+const withSize = (text: string, size: number) => text.replace("{size}", size.toFixed(1));
+
 type P = { x: number; y: number };
 
 /** What a filter gets every frame. Coordinates are already mirrored to match the selfie view. */
@@ -274,7 +282,7 @@ function drawSplat(ctx: CanvasRenderingContext2D, sp: Splat, scale: number) {
  * The limit is random each round, so the tension is real: the wobble and the pale, thinning
  * skin are the only warning you get.
  */
-function gumFilter(): ArFilter {
+function gumFilter(labels: () => ArLabels): ArFilter {
   const bits: Particle[] = [];
   let splats: Splat[] = [];
   let poppedAt = 0;
@@ -298,10 +306,11 @@ function gumFilter(): ArFilter {
 
   return {
     hint: () => {
-      if (phase === "pop") return `POP! ${shown.toFixed(1)}x your face`;
-      if (phase === "bank") return `Saved it: ${shown.toFixed(1)}x your face`;
-      if (phase === "blow") return r / limit > 0.72 ? "Careful, it is about to go" : "Keep blowing...";
-      return "Puff your cheeks to blow a bubble";
+      const l = labels();
+      if (phase === "pop") return withSize(l.gumPop, shown);
+      if (phase === "bank") return withSize(l.gumBank, shown);
+      if (phase === "blow") return r / limit > 0.72 ? l.gumCareful : l.gumKeep;
+      return l.gumStart;
     },
     draw(f) {
       const { ctx, W, H, faceW: u, roll, now, dt, mouth } = f;
@@ -526,7 +535,7 @@ function flare(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, a
  * expression goes off by accident. Asking for a held brow first, then a blink, means the shot is
  * always intentional, and the pause between the two is where people perform for the camera.
  */
-function laserFilter(): ArFilter {
+function laserFilter(labels: () => ArLabels): ArFilter {
   const sparks: Spark[] = [];
   const rings: { x: number; y: number; at: number }[] = [];
   let phase: "idle" | "charge" | "fire" | "cool" = "idle";
@@ -543,10 +552,11 @@ function laserFilter(): ArFilter {
 
   return {
     hint: () => {
-      if (phase === "fire") return "FIRE!";
-      if (phase === "cool") return "Recharging...";
-      if (phase === "charge") return charge > 0.6 ? "Blink to fire!" : "Charging... hold it";
-      return "Raise your eyebrows to charge";
+      const l = labels();
+      if (phase === "fire") return l.laserFire;
+      if (phase === "cool") return l.laserCool;
+      if (phase === "charge") return charge > 0.6 ? l.laserBlink : l.laserCharging;
+      return l.laserStart;
     },
     draw(f) {
       const { ctx, W, H, faceW: u, roll, now, dt } = f;
@@ -739,11 +749,11 @@ function laserFilter(): ArFilter {
   };
 }
 
-export function createFilter(id: TemplateId): ArFilter {
+export function createFilter(id: TemplateId, labels: () => ArLabels): ArFilter {
   switch (id) {
     case "gum":
-      return gumFilter();
+      return gumFilter(labels);
     case "laser":
-      return laserFilter();
+      return laserFilter(labels);
   }
 }
