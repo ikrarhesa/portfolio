@@ -13,9 +13,9 @@ export default function SiteFooter() {
           <p className="mt-1">Designer of digital products and creative systems</p>
         </div>
         <nav aria-label="Footer" className="flex flex-wrap gap-x-6">
-          <a href="#work" className={LINK}>Work</a>
-          <a href="#about" className={LINK}>About</a>
-          <a href="#contact" className={LINK}>Contact</a>
+          <a href="/#work" className={LINK}>Work</a>
+          <a href="/#about" className={LINK}>About</a>
+          <a href="/#contact" className={LINK}>Contact</a>
           {CONTACT.email && <a href={`mailto:${CONTACT.email}`} className={LINK}>Email</a>}
           {CONTACT.linkedin && (
             <a href={CONTACT.linkedin} target="_blank" rel="noreferrer" className={LINK}>LinkedIn</a>

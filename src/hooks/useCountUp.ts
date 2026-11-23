@@ -1,10 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** Eases a number from `from` to `to` once on mount. Jumps straight to `to` for reduced-motion users. */
 export function useCountUp(to: number, { from = 0, duration = 1800, delay = 0 } = {}) {
-  const [value, setValue] = useState(() => (prefersReducedMotion() ? to : from));
+  // Starts at the final number so the pre-rendered HTML (and anything that reads it without running the
+  // animation) shows the real value. The layout effect drops it to `from` before the first paint.
+  const [value, setValue] = useState(to);
+
+  useLayoutEffect(() => {
+    // Intentional: a layout effect runs before paint, so there is no flash and no extra visible render
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!prefersReducedMotion()) setValue(from);
+  }, [from]);
 
   useEffect(() => {
     if (prefersReducedMotion()) return;

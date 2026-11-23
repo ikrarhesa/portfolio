@@ -215,7 +215,7 @@ export default function TanaCaseStudy({ mission }: { mission: Mission }) {
 
   return (
     <article className="pt-10 pb-16 md:pt-14">
-      <a href="#work" className={`inline-flex items-center gap-2 rounded py-2 text-sm text-zinc-400 hover:text-zinc-100 ${FOCUS}`}>
+      <a href="/#work" className={`inline-flex items-center gap-2 rounded py-2 text-sm text-zinc-400 hover:text-zinc-100 ${FOCUS}`}>
         <span aria-hidden>←</span> All work
       </a>
 
@@ -635,7 +635,7 @@ export default function TanaCaseStudy({ mission }: { mission: Mission }) {
             </a>
           )}
           <a
-            href="#work"
+            href="/#work"
             className={`inline-block rounded py-2 text-sm text-zinc-300 underline decoration-zinc-600 underline-offset-4 hover:text-white hover:decoration-fuchsia-300 ${FOCUS}`}
           >
             ← All work

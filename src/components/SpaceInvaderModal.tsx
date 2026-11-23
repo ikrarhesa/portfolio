@@ -242,7 +242,7 @@ const GameDialog = ({ onClose }: { onClose: () => void }) => {
                             <div className="mt-6 border-t border-white/10 pt-5">
                                 <p className="font-mono text-xs text-zinc-400">Nice shooting. Want to build something together?</p>
                                 <a
-                                    href="#contact"
+                                    href="/#contact"
                                     onClick={onClose}
                                     className="mt-3 inline-block rounded-lg bg-white px-5 py-2 font-mono text-sm font-semibold text-black hover:bg-fuchsia-200 transition-colors"
                                 >

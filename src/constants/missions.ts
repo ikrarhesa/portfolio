@@ -203,4 +203,4 @@ export const MISSIONS: {
 
 export type Mission = (typeof MISSIONS)[number];
 
-export const projectHref = (id: MissionId) => `#/work/${id}`;
+export const projectHref = (id: MissionId) => `/work/${id}`;

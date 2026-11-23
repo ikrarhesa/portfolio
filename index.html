@@ -8,6 +8,30 @@
         document.documentElement.dataset.theme = "light";
       }
     </script>
+    <!-- The page is pre-rendered, so without this a first-time visitor would see the home page flash before the
+         intro covers it. Mirror of shouldPlayIntro() in src/App.tsx: hide until React mounts (it removes the
+         class). The CSS animation un-hides it after 3s in case the script never loads. Readers that don't run
+         JavaScript never get the class, so they always see the content. -->
+    <script>
+      (function () {
+        try {
+          var l = window.location;
+          var bot = navigator.webdriver === true || /bot|crawl|spider|slurp|preview|headless|lighthouse|gpt|claude|perplexity|anthropic|openai/i.test(navigator.userAgent);
+          var forced = /(^|[?&])intro([=&]|$)/.test(l.search);
+          var seen = parseInt(localStorage.getItem("hesa_intro_seen") || "", 10);
+          var stale = !isFinite(seen) || Date.now() - seen > 7 * 24 * 60 * 60 * 1000;
+          if (forced || (!bot && l.pathname === "/" && l.hash.length <= 1 && stale)) {
+            document.documentElement.classList.add("intro-pending");
+          }
+        } catch (e) {
+          if (location.pathname === "/") document.documentElement.classList.add("intro-pending");
+        }
+      })();
+    </script>
+    <style>
+      @keyframes intro-unhide { to { visibility: visible; } }
+      .intro-pending #root { visibility: hidden; animation: intro-unhide 0s 3s forwards; }
+    </style>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -46,83 +70,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <!-- Static copy of the page for readers that don't run JavaScript (crawlers, link previews, AI tools).
-         React replaces everything inside #root when it mounts. Keep this in sync with src/App.tsx and
-         src/constants/missions.ts when the copy changes. -->
-    <div id="root">
-      <main style="max-width:44rem;margin:0 auto;padding:2rem 1.25rem;font-family:Inter,system-ui,sans-serif;line-height:1.6">
-        <header>
-          <p>Ikrar Hesa Prasetya · Jakarta</p>
-          <h1>Designer of digital products and creative systems.</h1>
-          <p>
-            I design experiences and tools that help people communicate, create and sell. Currently designing at
-            Shopee, working on creative tools used by millions across Southeast Asia.
-          </p>
-        </header>
-
-        <nav aria-label="Primary">
-          <a href="#work">Work</a> · <a href="#about">About</a> · <a href="#contact">Contact</a>
-        </nav>
-
-        <section id="work">
-          <h2>Selected case studies</h2>
-
-          <article>
-            <h3><a href="#/work/video-ar">Localizing Shopee's AR effects for Indonesia</a></h3>
-            <p>
-              Shipped · 2022–present · Product designer, SDK. Replaced an effects library built for another market
-              with one made for Indonesian users, refreshed it every week, and gave sellers commercial effects with
-              text they can edit, for both Shopee Video and Shopee Live. Videos a week using AR effects in Indonesia
-              grew from 30 to 500 after the library refresh.
-            </p>
-          </article>
-
-          <article>
-            <h3><a href="#/work/template">Fixing low template adoption in Malaysia: 200 to 34K weekly uses</a></h3>
-            <p>
-              Shipped · 2023 · Designer, SDK, Malaysia design direction. Template adoption in Malaysia was low. I
-              reused what worked in Indonesia, researched what Malaysian users like, then designed for them. Weekly
-              uses grew from 200 to 34,000 within three months.
-            </p>
-          </article>
-
-          <article>
-            <h3><a href="#/work/tana">Tana: making recycling visible and rewarding</a></h3>
-            <p>
-              Concept · 2024 · Researcher and designer. A 12-week solo concept for a recycling app in Indonesia,
-              built from interviews, a survey and visits to local waste banks. Never launched: the work is in the
-              research and the decisions it led to.
-            </p>
-          </article>
-        </section>
-
-        <section id="about">
-          <h2>About</h2>
-          <p>
-            I'm a multi-disciplinary designer with over 6 years of experience across product, brand and motion,
-            based in Jakarta. Currently at <a href="https://shopee.co.id/">Shopee</a>, designing creative tools and
-            experiences, including AR, at one of Southeast Asia's leading e-commerce platforms, used by millions of
-            people.
-          </p>
-          <p>
-            Before Shopee, I worked as a Creative Marketing Associate at
-            <a href="https://danacita.co.id/">Danacita</a>, where I helped schools, universities, bootcamps and
-            students access a more affordable education through Danacita's products and services, and helped grow
-            Danacita's design team.
-          </p>
-        </section>
-
-        <section id="contact">
-          <h2>Contact</h2>
-          <p>Open to product design roles and collaborations.</p>
-          <p>
-            <a href="mailto:ikrarhesa@hotmail.com">ikrarhesa@hotmail.com</a> ·
-            <a href="https://www.linkedin.com/in/ikrarhesa">LinkedIn</a> ·
-            <a href="/Ikrar-Hesa-Prasetya-Resume-2025.pdf">Download CV</a>
-          </p>
-        </section>
-      </main>
-    </div>
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

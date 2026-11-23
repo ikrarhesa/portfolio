@@ -14,8 +14,10 @@ import CountUp from "./components/CountUp";
 const INTRO_SEEN_KEY = "hesa_intro_seen"; // when the intro last played
 const INTRO_COOLDOWN = 7 * 24 * 60 * 60 * 1000; // replay at most once a week
 
-// The intro plays on a first visit, then at most once a week. It never makes someone wait who opened a link
-// straight to a page or section (e.g. a shared case study). Add ?intro to the URL to force it.
+// The intro plays on a first visit to the home page, then at most once a week. It never makes someone wait who
+// opened a link straight to a page or section (e.g. a shared case study). Add ?intro to the URL to force it.
+// index.html has an inline copy of these conditions that hides the pre-rendered page until React mounts, so keep
+// the two in step.
 // Automated readers (crawlers, link previews, AI browsing tools, headless browsers) snapshot the page early, so
 // they would only ever see the intro. Let them straight into the real content.
 const BOT_UA = /bot|crawl|spider|slurp|preview|headless|lighthouse|gpt|claude|perplexity|anthropic|openai/i;
@@ -24,7 +26,8 @@ const looksAutomated = () => navigator.webdriver === true || BOT_UA.test(navigat
 function shouldPlayIntro() {
   if (new URLSearchParams(window.location.search).has("intro")) return true;
   if (looksAutomated()) return false;
-  if (window.location.hash.length > 1) return false; // deep link
+  if (window.location.pathname !== "/") return false; // case study page
+  if (window.location.hash.length > 1) return false; // deep link to a section
   try {
     const seen = parseInt(localStorage.getItem(INTRO_SEEN_KEY) ?? "", 10);
     return !Number.isFinite(seen) || Date.now() - seen > INTRO_COOLDOWN;
@@ -50,25 +53,56 @@ const PRINCIPLES = [
   ["Honest communication", "Show trade-offs, not just glossy outcomes."],
 ];
 
-const getProjectId = (hash: string) => hash.match(/^#\/work\/([\w-]+)/)?.[1] ?? null;
+// Real paths: "/" is home and "/work/<id>" is a case study. Each one is also pre-rendered to its own HTML file.
+const ROUTE_RE = /^\/work\/([\w-]+)\/?$/;
+const getProjectId = (path: string) => path.match(ROUTE_RE)?.[1] ?? null;
 
 // ↑ ↑ ↓ ↓ ← → ← → B A
 const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 
-function App() {
+/** `initialPath` is only passed when pre-rendering at build time (see src/entry-server.tsx). */
+function App({ initialPath }: { initialPath?: string }) {
   // "leaving" means the intro is fading out while the site is already mounted underneath it
   // (so the hero animates in with no black gap).
-  const [intro, setIntro] = useState<"playing" | "leaving" | "done">(() => (shouldPlayIntro() ? "playing" : "done"));
+  const [intro, setIntro] = useState<"playing" | "leaving" | "done">(() =>
+    initialPath === undefined && shouldPlayIntro() ? "playing" : "done"
+  );
   const showLoader = intro === "playing";
   const [isSpaceInvaderModalOpen, setIsSpaceInvaderModalOpen] = useState(false);
-  const [hash, setHash] = useState(() => window.location.hash);
-  const project = MISSIONS.find((m) => m.id === getProjectId(hash)) ?? null;
+  const [path, setPath] = useState(() => initialPath ?? window.location.pathname);
+  const [navKey, setNavKey] = useState(0); // bumps on every in-app link click, so "/#about" re-scrolls
+  const project = MISSIONS.find((m) => m.id === getProjectId(path)) ?? null;
 
-  // Hash routing: "#/work/<id>" is a project page, anything else is home
+  // The page is hidden until React mounts when the intro is about to play (see index.html)
   useEffect(() => {
-    const onHashChange = () => setHash(window.location.hash);
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
+    document.documentElement.classList.remove("intro-pending");
+  }, []);
+
+  // Client-side navigation for links to "/" and "/work/<id>", so moving around doesn't reload the page.
+  // Back and forward buttons are handled by popstate.
+  useEffect(() => {
+    const onPopState = () => setPath(window.location.pathname);
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.("a");
+      if (!a || a.target || a.hasAttribute("download")) return;
+      const url = new URL(a.href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname !== "/" && !ROUTE_RE.test(url.pathname)) return; // e.g. the CV PDF
+      e.preventDefault();
+      const next = url.pathname + url.search + url.hash;
+      if (next !== window.location.pathname + window.location.search + window.location.hash) {
+        window.history.pushState(null, "", next);
+      }
+      setPath(url.pathname);
+      setNavKey((k) => k + 1);
+    };
+    window.addEventListener("popstate", onPopState);
+    document.addEventListener("click", onClick);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      document.removeEventListener("click", onClick);
+    };
   }, []);
 
   // Konami code opens the game
@@ -106,10 +140,14 @@ function App() {
     }
     document.title = "Ikrar Hesa Prasetya · Product & Creative Systems Designer";
     const id = window.location.hash.slice(1);
-    if (id && !id.startsWith("/")) {
+    if (id) {
       requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+    } else if (navKey > 0) {
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, 0); // arrived through a link to "/" (the logo)
+      root.style.scrollBehavior = "";
     }
-  }, [project, showLoader]);
+  }, [project, showLoader, navKey]);
 
   const handleReveal = () => {
     setIntro("leaving");
@@ -149,14 +187,14 @@ function App() {
               </p>
               <div className="rise mt-8 flex flex-wrap gap-3" style={delay(400)}>
                 <a
-                  href="#work"
+                  href="/#work"
                   className="group inline-flex items-center gap-2 rounded-xl bg-fuchsia-500 px-7 py-4 text-base font-semibold text-white shadow-[0_8px_30px_rgba(217,70,239,0.35)] transition-colors hover:bg-fuchsia-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
                 >
                   See selected work
                   <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
                 </a>
                 <a
-                  href="#contact"
+                  href="/#contact"
                   className="inline-flex items-center rounded-xl px-4 py-4 max-sm:px-0 text-sm font-medium text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white hover:decoration-fuchsia-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-300"
                 >
                   Get in touch

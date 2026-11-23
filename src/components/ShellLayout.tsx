@@ -4,9 +4,9 @@ import { useTheme } from "../hooks/useTheme";
 import ThemeNudge from "./ThemeNudge";
 
 const NAV = [
-  { id: "work", label: "Work", href: "#work" },
-  { id: "about", label: "About", href: "#about" },
-  { id: "contact", label: "Contact", href: "#contact" },
+  { id: "work", label: "Work", href: "/#work" },
+  { id: "about", label: "About", href: "/#about" },
+  { id: "contact", label: "Contact", href: "/#contact" },
 ];
 
 type ShellLayoutProps = {
@@ -102,7 +102,7 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
           ].join(" ")}
         >
           <a
-            href="#top"
+            href="/"
             className="group font-semibold text-zinc-100 tracking-tight focus-visible:outline-2 focus-visible:outline-fuchsia-400 rounded"
           >
             Hesa
@@ -161,7 +161,7 @@ function ShellLayout({ children, route = "home" }: ShellLayoutProps) {
             </span>
 
           <a
-            href="#contact"
+            href="/#contact"
             className="hidden sm:inline-flex items-center gap-2 text-xs text-emerald-300 border border-emerald-400/30 rounded-full px-3 py-1.5 hover:bg-emerald-400/10 focus-visible:outline-2 focus-visible:outline-emerald-300"
           >
             <span className="relative flex size-2">
