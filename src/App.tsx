@@ -98,7 +98,7 @@ function App() {
       document.title = `${project.title} · Ikrar Hesa Prasetya`;
       return;
     }
-    document.title = "Ikrar Hesa Prasetya · Product Designer";
+    document.title = "Ikrar Hesa Prasetya · Product & Creative Systems Designer";
     const id = window.location.hash.slice(1);
     if (id && !id.startsWith("/")) {
       requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
@@ -135,11 +135,11 @@ function App() {
                 className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 md:text-6xl"
                 style={delay(120)}
               >
-                Product designer on the <span className="shimmer-text">AR toolkit</span> behind Shopee Video and Live.
+                Designer of digital products and <span className="shimmer-text">creative systems</span>.
               </h1>
               <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-zinc-300" style={delay(260)}>
-                The effects, stickers, filters and templates sellers use, rebuilt for Indonesian users, refreshed every
-                week, and shipped across Southeast Asia.
+                I design experiences and tools that help people communicate, create and sell. Currently designing at
+                Shopee, working on creative tools used by millions across Southeast Asia.
               </p>
               <div className="rise mt-8 flex flex-wrap gap-3" style={delay(400)}>
                 <a
@@ -213,12 +213,13 @@ function App() {
 
               <div className="mt-6 space-y-5 text-base leading-relaxed text-zinc-300">
                 <p className="text-lg text-zinc-200">
-                  I'm a multi-disciplinary product designer with over 6 years of experience based in Jakarta. Currently at{" "}
+                  I'm a multi-disciplinary designer with over 6 years of experience across product, brand and motion,
+                  based in Jakarta. Currently at{" "}
                   <a href="https://shopee.co.id/" target="_blank" rel="noreferrer" className={LINK}>
                     Shopee
-                  </a>{" "}
-                  building augmented reality designs and experiences at one of Southeast Asia's leading e-commerce
-                  platforms, impacting millions of users.
+                  </a>
+                  , designing creative tools and experiences, including AR, at one of Southeast Asia's leading
+                  e-commerce platforms, used by millions of people.
                 </p>
                 <p>
                   I am driven by curiosity and my mission to design empathetic products that balance user experience and
