@@ -10,7 +10,7 @@ export default function SiteFooter() {
       <div className="flex flex-wrap items-start justify-between gap-8">
         <div>
           <p className="font-semibold text-zinc-300">Ikrar Hesa Prasetya</p>
-          <p className="mt-1">Product designer · video, AR and marketplace products</p>
+          <p className="mt-1">Product designer · video, live, AR and marketplace products</p>
         </div>
         <nav aria-label="Footer" className="flex flex-wrap gap-x-6">
           <a href="#work" className={LINK}>Work</a>
