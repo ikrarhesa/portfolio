@@ -98,7 +98,7 @@ const HolographicPanel = () => {
                 </div>
               </div>
               <div className="text-fuchsia-200/90 text-xs md:text-sm font-mono">
-                Product Designer · AR & Video · Product Strategy
+                Product Designer · AR, Video & Live · Product Strategy
               </div>
               <div className="text-fuchsia-300/80 text-[11px] md:text-xs font-mono">
                 SECTOR: Consumer apps · Marketplace · Edtech
@@ -108,10 +108,10 @@ const HolographicPanel = () => {
             {/* Core Mission */}
             <div className="space-y-2 md:space-y-3">
               <div className="text-fuchsia-300 text-base md:text-xl lg:text-2xl font-mono font-semibold leading-tight drop-shadow-[0_0_10px_rgba(217,70,239,0.6)]">
-                Designing high-impact digital systems for video, marketplaces, and learning.
+                Designing high-impact digital systems for video, live, marketplaces, and learning.
               </div>
               <div className="text-fuchsia-100/90 text-xs md:text-sm font-mono leading-relaxed">
-                I turn messy product problems into shippable, measurable experiences: AR camera tools, short-video funnels, and tools for small businesses and students.
+                I turn messy product problems into shippable, measurable experiences: AR camera tools for video and live, short-video funnels, and tools for small businesses and students.
               </div>
             </div>
 

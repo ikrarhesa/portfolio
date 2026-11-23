@@ -299,7 +299,7 @@ function gumFilter(): ArFilter {
   return {
     hint: () => {
       if (phase === "pop") return `POP! ${shown.toFixed(1)}x your face`;
-      if (phase === "bank") return `Saved it - ${shown.toFixed(1)}x your face`;
+      if (phase === "bank") return `Saved it: ${shown.toFixed(1)}x your face`;
       if (phase === "blow") return r / limit > 0.72 ? "Careful, it is about to go" : "Keep blowing...";
       return "Puff your cheeks to blow a bubble";
     },

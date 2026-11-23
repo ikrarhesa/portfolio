@@ -138,7 +138,7 @@ function App() {
                 Product designer on the <span className="shimmer-text">AR toolkit</span> behind Shopee Video.
               </h1>
               <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-zinc-300" style={delay(260)}>
-                The effects, stickers, filters and templates sellers use — rebuilt for Indonesian users, refreshed every
+                The effects, stickers, filters and templates sellers use, rebuilt for Indonesian users, refreshed every
                 week, and shipped across Southeast Asia.
               </p>
               <div className="rise mt-8 flex flex-wrap gap-3" style={delay(400)}>

@@ -320,7 +320,7 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
         )}
         {note?.kind === "gum" && (
           <p className="text-center font-mono text-[11px] text-fuchsia-200" role="status">
-            {note.popped ? "POP! " : "Saved it — "}
+            {note.popped ? "POP! " : "Saved it: "}
             {note.size.toFixed(1)}× your face
             {note.best > note.size + 0.05 && <span className="text-zinc-400"> · best {note.best.toFixed(1)}×</span>}
           </p>
