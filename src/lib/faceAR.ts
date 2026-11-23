@@ -3,12 +3,11 @@ import { createFilter, type ArEvent, type ArFilter, type TemplateId } from "./ar
 
 export type { ArEvent, TemplateId } from "./arFilters";
 
-// Face tracking runs entirely in the visitor's browser. Only the library's WASM and the
-// ~4MB model file are fetched (from public CDNs); no video frames ever leave the device.
+// Face tracking runs entirely in the visitor's browser. The ~4MB model file is served from this
+// site (public/mediapipe) and the library's WASM comes from jsDelivr; no video frames ever leave the device.
 const VERSION = "1.2.3";
 const WASM_URL = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${VERSION}/wasm`;
-const MODEL_URL =
-  "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
+const MODEL_URL = "/mediapipe/face_landmarker.task";
 
 export const openCamera = (size = { width: 960, height: 720 }) =>
   navigator.mediaDevices.getUserMedia({
