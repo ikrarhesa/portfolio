@@ -36,12 +36,6 @@ export const home = {
         ", where I helped schools, universities, bootcamps and students access a more affordable education through Danacita's products and services. I also helped bring those products to market and grow Danacita's design team.",
     },
     p4: "In my downtime, I enjoy exploring new destinations with my trusty camera.",
-    how: "How I work",
-    principles: [
-      ["Clarity over cleverness", "Keep the UX plain. Save the cleverness for interaction details."],
-      ["Systems thinking", "Design how components, journeys and metrics connect."],
-      ["Honest communication", "Show trade-offs, not just glossy outcomes."],
-    ] as [string, string][],
   },
   contact: {
     label: "Contact",

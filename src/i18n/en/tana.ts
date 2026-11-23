@@ -146,15 +146,11 @@ export const tana = {
     title: "From sketches to flows",
     label: "Process",
     intro:
-      "Before any screen, I sketched the structure on paper and mapped how people would move through it. Both were cheap to change, which is why I did them first.",
+      "Before any screen, I sketched the structure on paper and mapped how people would move through it. Both were cheap to change, which is why I did them first. The full user flows are in the working files at the end of this page.",
     sketchesAlt:
       "A sheet of eight pencil wireframes: home, locate recycle point, scan, social, leaderboard, waste pick-up, voucher and trash alert",
     sketchesCaption:
       "Eight pencil wireframes on one sheet: home, find a recycle point, scan, social, leaderboard, waste pick-up, voucher and trash alert. This is where the app's shape was decided.",
-    flowAlt:
-      "User flow for finding a recycle point: allow location, find the nearest point, walk or drive there, drop off, then collect cash or rewards, with a path for when recycling fails",
-    flowCaption:
-      "The Recycle Point flow, one of five I mapped. It includes the unhappy paths: location access refused, a point too far to walk, and a drop-off that fails. Click to open full size.",
     opensFull: "{alt} (opens full size)",
   },
 

@@ -288,18 +288,6 @@ function App({ initialPath }: { initialPath?: string }) {
                 </p>
                 <p>{t.home.about.p4}</p>
               </div>
-
-              <div className="mt-12 border-t border-white/10 pt-8">
-                <Label>{t.home.about.how}</Label>
-                <ul className="mt-5 grid gap-6 sm:grid-cols-3">
-                  {t.home.about.principles.map(([title, body]) => (
-                    <li key={title}>
-                      <p className="font-semibold text-zinc-100">{title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-zinc-400">{body}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
           </div>
         </section>

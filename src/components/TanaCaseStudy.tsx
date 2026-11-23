@@ -227,7 +227,6 @@ export default function TanaCaseStudy({ mission }: { mission: Mission }) {
         <p className="text-base leading-relaxed text-zinc-300">{c.process.intro}</p>
         <div className="mt-8 space-y-10">
           <Figure src="/tana/sketches.jpg" w={1378} h={1014} alt={c.process.sketchesAlt} caption={c.process.sketchesCaption} />
-          <Figure src="/tana/recycle-flow.jpg" w={2000} h={440} alt={c.process.flowAlt} caption={c.process.flowCaption} />
         </div>
       </Section>
 
