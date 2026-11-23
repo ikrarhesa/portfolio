@@ -16,8 +16,14 @@ const INTRO_COOLDOWN = 7 * 24 * 60 * 60 * 1000; // replay at most once a week
 
 // The intro plays on a first visit, then at most once a week. It never makes someone wait who opened a link
 // straight to a page or section (e.g. a shared case study). Add ?intro to the URL to force it.
+// Automated readers (crawlers, link previews, AI browsing tools, headless browsers) snapshot the page early, so
+// they would only ever see the intro. Let them straight into the real content.
+const BOT_UA = /bot|crawl|spider|slurp|preview|headless|lighthouse|gpt|claude|perplexity|anthropic|openai/i;
+const looksAutomated = () => navigator.webdriver === true || BOT_UA.test(navigator.userAgent);
+
 function shouldPlayIntro() {
   if (new URLSearchParams(window.location.search).has("intro")) return true;
+  if (looksAutomated()) return false;
   if (window.location.hash.length > 1) return false; // deep link
   try {
     const seen = parseInt(localStorage.getItem(INTRO_SEEN_KEY) ?? "", 10);

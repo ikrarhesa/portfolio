@@ -237,7 +237,7 @@ export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void
           </span>
         </div>
         <p className="intro-sub mt-3 text-base text-[#a1a1aa] md:text-lg" style={css({ animationDelay: "2s" })}>
-          I design video, live, AR and marketplace products.
+          I design digital products and creative systems.
         </p>
       </div>
 
