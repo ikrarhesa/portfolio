@@ -207,26 +207,26 @@ export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void
       {/* Telemetry readout + greeting */}
       <div className="relative mt-5 text-center">
         <div
-          className="intro-in flex items-center justify-center gap-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.16em] text-fuchsia-300/80 sm:gap-5 sm:text-[11px] sm:tracking-[0.24em]"
+          className="intro-in flex items-center justify-center gap-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.16em] text-[#f0abfc]/80 sm:gap-5 sm:text-[11px] sm:tracking-[0.24em]"
           style={css({ animationDelay: "0.7s" })}
           aria-hidden
         >
           <span>
-            Unit <b className="font-semibold text-fuchsia-100">{holo.unit}</b>
+            Unit <b className="font-semibold text-[#fae8ff]">{holo.unit}</b>
           </span>
           <span className="h-3 w-px bg-fuchsia-300/30" />
           <span>
-            Value <b className="font-semibold text-fuchsia-100">{holo.value}</b>
+            Value <b className="font-semibold text-[#fae8ff]">{holo.value}</b>
           </span>
           <span className="h-3 w-px bg-fuchsia-300/30" />
           <span>
             Scan{" "}
-            <b className="font-semibold text-fuchsia-100">
+            <b className="font-semibold text-[#fae8ff]">
               <CountUp to={100} suffix="%" delay={700} duration={1500} />
             </b>
           </span>
         </div>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-zinc-50 md:text-5xl">
+        <h1 className="mt-4 text-4xl font-bold tracking-tight text-[#ffffff] md:text-5xl">
           {words.map((w, i) => (
             <span key={w} className="intro-word inline-block" style={css({ animationDelay: `${1.5 + i * 0.12}s` })}>
               {w}&nbsp;
@@ -236,7 +236,7 @@ export default function IntroLoader({ onReveal, onDone }: { onReveal: () => void
             <span className="shimmer-cyan">Hesa.</span>
           </span>
         </h1>
-        <p className="intro-sub mt-3 text-base text-zinc-400 md:text-lg" style={css({ animationDelay: "2s" })}>
+        <p className="intro-sub mt-3 text-base text-[#a1a1aa] md:text-lg" style={css({ animationDelay: "2s" })}>
           I design video, AR and marketplace products.
         </p>
       </div>
