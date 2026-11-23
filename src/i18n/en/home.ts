@@ -9,8 +9,11 @@ export const home = {
     ctaContact: "Get in touch",
   },
   proof: [
-    { label: "videos a week using AR effects in Indonesia after the library refresh, up from 30" },
-    { label: "years across design, motion and digital marketing" },
+    { label: "videos a week posted with a template in Malaysia, up from 200 in three months" },
+    {
+      label:
+        "markets my designs ship to, localized for each: Indonesia, Malaysia, Thailand, Vietnam, the Philippines and Taiwan. I managed Malaysia.",
+    },
   ],
   work: { label: "Selected work", heading: "Selected case studies", viewCase: "View case study" },
   about: {

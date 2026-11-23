@@ -108,14 +108,14 @@ export const MISSIONS: {
         {
           title: "The constraints",
           body: [
-            "There were four designers, one per region. I owned Indonesia, which is the market this case study is about, and from 2023 I owned Malaysia too. My designs shipped to every market, but each regional designer set their own strategy, such as how often to refresh the library and where to place effects. The team was small and had to decide and ship fast.",
+            "There were four designers, one per region, and I managed Malaysia. Indonesia was shared: all four of us designed for it, and it is the market this case study is about. Most of our designs were pushed to the other markets too, with the copy localized for each one, for example Indonesian copy translated into Thai or Vietnamese. Each market decided what to use, and each regional designer set their own strategy, such as how often to refresh the library and where to place effects. The team was small and had to decide and ship fast.",
             "When Malaysia came in 2023, its side changed often and never had one fixed owner. Before each planning round I had to find out who was responsible, bring them together and agree the plan again. The constraint was not engineering capacity. It was people and time.",
           ],
           visual: {
             type: "team",
             count: 4,
-            mine: "Me · Indonesia, then Malaysia",
-            note: "Four designers, one per region. I owned Indonesia, and Malaysia from 2023, where the product owner kept changing.",
+            mine: "Me · Malaysia",
+            note: "Four designers, one per region. All four of us designed for Indonesia. I managed Malaysia, where the product owner kept changing.",
           },
         },
       ],
@@ -162,7 +162,7 @@ export const MISSIONS: {
       resultsNote: [
         "Figures come from Shopee's internal dashboards, Data Studio and DataZoo, which track views, videos posted, completion rate, conversion rate, comments and likes. The numbers here are rounded, and they count videos posted using an effect. They do not capture how sellers use effects on Shopee Live.",
         "Effects are smaller than templates, because each one is used for something specific and for a short time. A new effect usually got only about 5 to 6 uses in its first two months. Across a library that is refreshed every week, those add up to hundreds of videos a week.",
-        "The same designs were pushed to every market, but each region ran its own strategy, so numbers differ by region. I report Indonesia, the region this figure comes from. Malaysia came later, in 2023, and its data for effects is thinner, so I don't report it here.",
+        "Most of the same designs were pushed to other markets too, but each region ran its own strategy, so numbers differ by region. I report Indonesia, the region this figure comes from. Malaysia came later, in 2023, and its data for effects is thinner, so I don't report it here.",
       ],
       learnings: [
         "Local relevance beats polish. The effects that worked used Indonesian copy and a light touch, not heavy decoration.",

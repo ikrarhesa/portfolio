@@ -38,8 +38,8 @@ function shouldPlayIntro() {
 
 // The numbers are the same in every language; the labels come from the content files (home.proof, same order)
 const PROOF: { from?: number; to: number; prefix?: string; suffix: string }[] = [
-  { from: 30, to: 500, prefix: "", suffix: "" },
-  { to: 6, suffix: "+" },
+  { from: 200, to: 34000, prefix: "", suffix: "" },
+  { to: 6, suffix: "" },
 ];
 
 // Staggered entrance delay for the hero (see .rise in index.css)

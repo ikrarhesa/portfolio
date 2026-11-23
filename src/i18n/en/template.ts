@@ -33,7 +33,7 @@ export const template = {
   problem: {
     title: "The problem",
     label: "Context",
-    p1: "Templates sit under the same SDK as effects and stickers. My designs shipped to every market, but each region set its own strategy for the library.",
+    p1: "Templates sit under the same SDK as effects and stickers. Most of my designs shipped to the other markets too, but each region set its own strategy for the library.",
     p2: "In Malaysia the problem was adoption. The library existed, but very few people were using it: about 200 videos a week were posted with a template.",
     quote: "Templates only matter if people use them. How do we get sellers to start?",
   },
