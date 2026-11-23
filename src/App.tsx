@@ -138,7 +138,7 @@ function App({ initialPath }: { initialPath?: string }) {
       document.title = `${project.title} · Ikrar Hesa Prasetya`;
       return;
     }
-    document.title = "Ikrar Hesa Prasetya · Product & Creative Systems Designer";
+    document.title = "Ikrar Hesa Prasetya · Product Designer | Creative Tools & Systems";
     const id = window.location.hash.slice(1);
     if (id) {
       requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());

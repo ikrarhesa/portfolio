@@ -17,8 +17,8 @@ import HoloSprite from "./HoloSprite";
  *  onDone:   the overlay has fully faded and can be removed
  */
 
-const MIN_MS = 3700; // the build-up, scan and greeting are in by ~2s; the rest is time to read them
-const MAX_MS = 4500; // never hold a slow connection hostage (only fonts can delay it)
+const MIN_MS = 2600; // the build-up, scan and greeting are in by ~2s; a beat to read them, then straight in
+const MAX_MS = 3200; // never hold a slow connection hostage (only fonts can delay it)
 const LEAVE_MS = 650;
 const HOLO_KEY = "hesa_intro_hologram";
 

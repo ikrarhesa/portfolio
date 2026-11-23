@@ -36,8 +36,33 @@ export const MISSIONS: {
   highlights: string[];
 }[] = [
     {
-      id: "video-ar",
+      id: "template",
       label: "Mission 01",
+      cardTitle: "Shopee Video templates",
+      tagline: "From 200 to 34K weekly uses in Malaysia",
+      title: "Fixing low template adoption in Malaysia: 200 to 34K weekly uses",
+      summary:
+        "Template adoption in Malaysia was low. I reused what worked in Indonesia, researched what Malaysian users like, then designed for them. Videos posted with a template each week grew from 200 to 34,000 within three months.",
+      role: "Designer · SDK, Malaysia design direction",
+      focus: "Template library, adoption, trend research",
+      surface: "Video templates · Shopee Video",
+      status: "Shipped",
+      year: "2023",
+      stack: ["Video templates", "SDK toolkit", "Trend research", "TikTok tools", "CapCut", "Competitor review", "Cross-region work"],
+      cover: [
+        { video: "/template/six-frames.mp4", poster: "/template/six-frames.jpg" },
+        { video: "/template/bento-grid.mp4", poster: "/template/bento-grid.jpg" },
+        { video: "/template/windows-like.mp4", poster: "/template/windows-like.jpg" },
+      ],
+      highlights: [
+        "Designer on the Shopee Video SDK, and the one who kept the Malaysia design direction and toolkit",
+        "Researched Malaysian trends through TikTok tools, top content, CapCut, competitors and the local marketing team",
+        "Weekly template uses grew from 200 to 34K within three months, with a single OOTD template driving around 15K",
+      ],
+    },
+    {
+      id: "video-ar",
+      label: "Mission 02",
       cardTitle: "Localizing Shopee AR effects",
       tagline: "AR effects made for Indonesian users",
       title: "Localizing Shopee's AR effects for Indonesia",
@@ -60,7 +85,7 @@ export const MISSIONS: {
         {
           title: "Context and goal",
           body: [
-            "In 2022, Shopee launched Shopee Video. The effect library at launch was mostly built by the regional team in China, so it spoke to that market and not to Indonesia or Malaysia.",
+            "In 2022, Shopee launched Shopee Video. The effect library at launch was mostly built by the regional team in China, so it spoke to that market and not to Indonesia.",
             "I joined in September 2022 as the second designer on the Video team. My title was product designer. The work was designing for the SDK, the toolkit behind effects, stickers and templates, and day to day it also included UI and UX.",
             "The goal was to help sellers make videos and live streams that hold attention, and to give buyers a reason to stop when they see one. AR effects, which Shopee calls magic, were one of the ways to do that.",
             "The effects were not only for video. In 2024 Shopee Live came to the same toolkit, and most of the effects available for video became available for live as well. Sellers who livestream use them while they sell, and they lean on them most during campaigns such as the double-date sales.",
@@ -70,7 +95,7 @@ export const MISSIONS: {
             items: [
               { when: "2022", text: "Shopee Video launches, with a library built for another market" },
               { when: "Sep 2022", text: "I join as the second designer on the team" },
-              { when: "2023", text: "Effects, stickers and templates keep shipping, and templates take off in Malaysia" },
+              { when: "2023", text: "Effects, stickers and templates keep shipping. Malaysia joins my work, and templates take off there" },
               { when: "2024", text: "Shopee Live arrives, and most video effects, such as Limited Offer, become available for livestreams too" },
               { when: "Today", text: "Still shipping, at a lower frequency. My work now leans more toward UI and UX projects" },
             ],
@@ -83,14 +108,14 @@ export const MISSIONS: {
         {
           title: "The constraints",
           body: [
-            "There were four designers, one per region, and I owned Malaysia. My designs shipped to every market, but each regional designer set their own strategy, such as how often to refresh the library and where to place effects. The team was small and had to decide and ship fast.",
-            "The Malaysia side changed often and never had one fixed owner. Before each planning round I had to find out who was responsible, bring them together and agree the plan again. The constraint was not engineering capacity. It was people and time.",
+            "There were four designers, one per region. I owned Indonesia, which is the market this case study is about, and from 2023 I owned Malaysia too. My designs shipped to every market, but each regional designer set their own strategy, such as how often to refresh the library and where to place effects. The team was small and had to decide and ship fast.",
+            "When Malaysia came in 2023, its side changed often and never had one fixed owner. Before each planning round I had to find out who was responsible, bring them together and agree the plan again. The constraint was not engineering capacity. It was people and time.",
           ],
           visual: {
             type: "team",
             count: 4,
-            mine: "Me · Malaysia",
-            note: "Four designers, one per region. The Malaysia owner kept changing.",
+            mine: "Me · Indonesia, then Malaysia",
+            note: "Four designers, one per region. I owned Indonesia, and Malaysia from 2023, where the product owner kept changing.",
           },
         },
       ],
@@ -137,7 +162,7 @@ export const MISSIONS: {
       resultsNote: [
         "Figures come from Shopee's internal dashboards, Data Studio and DataZoo, which track views, videos posted, completion rate, conversion rate, comments and likes. The numbers here are rounded, and they count videos posted using an effect. They do not capture how sellers use effects on Shopee Live.",
         "Effects are smaller than templates, because each one is used for something specific and for a short time. A new effect usually got only about 5 to 6 uses in its first two months. Across a library that is refreshed every week, those add up to hundreds of videos a week.",
-        "The same designs were pushed to every market, but each region ran its own strategy, so numbers differ by region. I report Indonesia, the region this figure comes from.",
+        "The same designs were pushed to every market, but each region ran its own strategy, so numbers differ by region. I report Indonesia, the region this figure comes from. Malaysia came later, in 2023, and its data for effects is thinner, so I don't report it here.",
       ],
       learnings: [
         "Local relevance beats polish. The effects that worked used Indonesian copy and a light touch, not heavy decoration.",
@@ -150,31 +175,6 @@ export const MISSIONS: {
         "Designed commercial effects with editable text, now live on the Shopee platform",
         "Built effects with Adobe Illustrator, After Effects and Shopee's in-house Shopee Effect tool",
         "Worked in a team of four designers, one per region, deciding and shipping fast",
-      ],
-    },
-    {
-      id: "template",
-      label: "Mission 02",
-      cardTitle: "Shopee Video templates",
-      tagline: "From 200 to 34K weekly uses in Malaysia",
-      title: "Fixing low template adoption in Malaysia: 200 to 34K weekly uses",
-      summary:
-        "Template adoption in Malaysia was low. I reused what worked in Indonesia, researched what Malaysian users like, then designed for them. Weekly uses grew from 200 to 34,000 within three months.",
-      role: "Designer · SDK, Malaysia design direction",
-      focus: "Template library, adoption, trend research",
-      surface: "Video templates · Shopee Video",
-      status: "Shipped",
-      year: "2023",
-      stack: ["Video templates", "SDK toolkit", "Trend research", "TikTok tools", "CapCut", "Competitor review", "Cross-region work"],
-      cover: [
-        { video: "/template/six-frames.mp4", poster: "/template/six-frames.jpg" },
-        { video: "/template/bento-grid.mp4", poster: "/template/bento-grid.jpg" },
-        { video: "/template/windows-like.mp4", poster: "/template/windows-like.jpg" },
-      ],
-      highlights: [
-        "Designer on the Shopee Video SDK, and the one who kept the Malaysia design direction and toolkit",
-        "Researched Malaysian trends through TikTok tools, top content, CapCut, competitors and the local marketing team",
-        "Weekly template uses grew from 200 to 34K within three months, with a single OOTD template driving around 15K",
       ],
     },
     {

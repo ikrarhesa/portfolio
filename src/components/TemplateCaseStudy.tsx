@@ -14,7 +14,7 @@ import CountUp from "./CountUp";
  */
 
 const HEADLINE = [
-  { from: 200, to: 34000, suffix: "", label: "weekly uses of video templates in Malaysia, up from 200 when the work began" },
+  { from: 200, to: 34000, suffix: "", label: "videos posted with a template in a week in Malaysia, up from 200 when the work began" },
   { from: 0, to: 3, suffix: " months", label: "from low adoption to 34K weekly uses" },
   { from: 0, to: 15000, suffix: "", label: "weekly uses from one OOTD-themed template alone. The rest followed with thousands each" },
 ];
@@ -195,6 +195,11 @@ export default function TemplateCaseStudy({ mission }: { mission: Mission }) {
           ))}
         </dl>
         <GrowthBars />
+        <p className="mt-6 max-w-2xl text-sm leading-relaxed text-zinc-400">
+          How to read the numbers: a “weekly use” is one video posted on Shopee Video using a template, in Malaysia, in
+          that week. Sellers can post without a template too, so this counts how many videos used one, not the total
+          number of videos posted. The growth shows that more of the videos going out were made with templates.
+        </p>
       </Section>
 
       <Section title="The problem" label="Context">
@@ -204,8 +209,8 @@ export default function TemplateCaseStudy({ mission }: { mission: Mission }) {
             set its own strategy for the library.
           </p>
           <p>
-            In Malaysia the problem was adoption. The library existed, but very few people were using it: 200 uses a
-            week.
+            In Malaysia the problem was adoption. The library existed, but very few people were using it: about 200
+            videos a week were posted with a template.
           </p>
         </div>
         <p className="mt-6 border-l-2 border-fuchsia-400 pl-4 text-lg leading-snug text-zinc-100">
