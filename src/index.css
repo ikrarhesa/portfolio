@@ -507,6 +507,10 @@ body {
 :root:not([data-theme="dark"]) a.bg-fuchsia-500.text-white:not(.fixed *):hover,
 :root:not([data-theme="dark"]) button.bg-fuchsia-500.text-white:not(.fixed *):hover,
 :root:not([data-theme="dark"]) a.hover\:bg-fuchsia-400.text-white:hover { background-color: #3f3f46; }
+/* The "View case study" button on the work cards is a span inside a link, so the rules above miss it */
+:root:not([data-theme="dark"]) span.bg-fuchsia-500.text-white { background-color: #18181b; box-shadow: none; }
+:root:not([data-theme="dark"]) .group:hover span.bg-fuchsia-500.text-white,
+:root:not([data-theme="dark"]) .group:focus-within span.bg-fuchsia-500.text-white { background-color: #3f3f46; }
 
 :root:not([data-theme="dark"]) .bg-white.text-black { background-color: #18181b; color: #fff; }
 :root:not([data-theme="dark"]) .bg-white.text-black:hover { background-color: #3f3f46; }
