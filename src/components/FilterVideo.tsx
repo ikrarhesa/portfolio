@@ -63,7 +63,7 @@ export default function FilterVideo({
         <video
           ref={videoRef}
           src={near ? src : undefined}
-          poster={poster}
+          poster={near ? poster : undefined}
           muted
           loop
           playsInline

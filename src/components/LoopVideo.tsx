@@ -34,7 +34,7 @@ export default function LoopVideo({ src, poster, className = "" }: { src: string
     <video
       ref={videoRef}
       src={near && !reduce ? src : undefined}
-      poster={poster}
+      poster={near ? poster : undefined} // posters load with the video, so off-screen ones don't compete with the page
       muted
       loop
       playsInline

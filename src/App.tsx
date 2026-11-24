@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import ShellLayout from "./components/ShellLayout";
 import IntroLoader from "./components/IntroLoader";
 import SiteFooter from "./components/SiteFooter";
-import SpaceInvaderModal from "./components/SpaceInvaderModal";
+// The game is only fetched when someone opens it
+const SpaceInvaderModal = lazy(() => import("./components/SpaceInvaderModal"));
 import { CONTACT } from "./constants/contact";
 import { fill, useContent, useLang, useMissions } from "./i18n";
 import Label from "./components/Label";
@@ -335,7 +336,11 @@ function App({ initialPath }: { initialPath?: string }) {
       </ShellLayout>
       )}
       {intro !== "done" && <IntroLoader onReveal={handleReveal} onDone={() => setIntro("done")} />}
-      <SpaceInvaderModal isOpen={isSpaceInvaderModalOpen} onClose={() => setIsSpaceInvaderModalOpen(false)} />
+      {isSpaceInvaderModalOpen && (
+        <Suspense fallback={null}>
+          <SpaceInvaderModal isOpen onClose={() => setIsSpaceInvaderModalOpen(false)} />
+        </Suspense>
+      )}
     </>
   );
 }
