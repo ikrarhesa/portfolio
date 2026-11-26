@@ -16,9 +16,11 @@ import { fill, useContent, useMissions } from "../i18n";
 
 // Counted up in the "result" cards. The labels and unit suffixes are in the content (template.result.headline).
 // 16,900% is (34,000 - 200) / 200: the growth in weekly template uses over the three months.
+// 59% is the dashboard's conversion rate: template videos posted / clicks into the template.
 const HEADLINE = [
   { from: 0, to: 16900 },
   { from: 0, to: 15000 },
+  { from: 0, to: 59 },
 ];
 
 // Bar lengths. The labels and the printed values are in the content (template.result.growth), same order.
@@ -107,10 +109,11 @@ export default function TemplateCaseStudy({ mission }: { mission: Mission }) {
       </dl>
 
       <Section title={c.result.title} label={c.result.label}>
-        <dl className="grid gap-4 sm:grid-cols-2">
+        <dl className="grid gap-4 sm:grid-cols-3">
           {c.result.headline.map((h, i) => (
             <div key={h.label} className={`${CARD} p-5`}>
-              <dt className="text-4xl font-bold tracking-tight text-zinc-50">
+              {/* nowrap: Japanese breaks between any two characters, which split "16,900" from its "%" */}
+              <dt className="whitespace-nowrap text-4xl font-bold tracking-tight text-zinc-50">
                 <CountUp from={HEADLINE[i].from} to={HEADLINE[i].to} suffix={h.suffix} />
               </dt>
               <dd className="mt-2 text-sm leading-snug text-zinc-400">{h.label}</dd>
@@ -230,6 +233,11 @@ export default function TemplateCaseStudy({ mission }: { mission: Mission }) {
                 </p>
                 <h3 className="mt-2 text-lg font-semibold tracking-tight text-zinc-50">{item.title}</h3>
                 {item.uses && <p className="mt-2 text-sm font-semibold text-zinc-200">{item.uses}</p>}
+                {item.share && (
+                  <p className="mt-2 border-l-2 border-fuchsia-400 pl-3 text-sm leading-snug text-zinc-300">
+                    {item.share}
+                  </p>
+                )}
                 <p className="mt-2 text-sm leading-relaxed text-zinc-400">{item.blurb}</p>
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {item.tags.map((tag) => (

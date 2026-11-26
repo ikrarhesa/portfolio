@@ -21,6 +21,11 @@ export const template = {
         label:
           "weekly uses from the OOTD template once I moved it to the top of the library, where it had been buried. I did not design that one; I changed where it sat",
       },
+      {
+        suffix: "%",
+        label:
+          "of clicks into the Desktop Album template ended in a posted video. Measured last week, three years after the work, not during it",
+      },
     ],
     growthAria: "Weekly template uses in Malaysia",
     growthCaption: "Weekly template uses, Malaysia",
@@ -114,12 +119,14 @@ export const template = {
     intro:
       "Three templates I designed. The same design often shipped under a different name in each market. They loop while on screen, and a tap pauses or plays.",
     template: "Template {n}",
-    // `uses` is the weekly-uses figure shown under each title. Left empty until the real per-template
-    // numbers are available; an empty string renders nothing, so no placeholder reaches the page.
+    // `uses` is the weekly figure under each title; `share` is that template's slice of all template
+    // posts. Both are left empty where the real numbers aren't available, and an empty string renders
+    // nothing, so no placeholder reaches the page.
     items: [
       {
         title: "Desktop Album",
-        uses: "9,990 videos in a week in Malaysia, three years after it shipped",
+        uses: "9,990 videos and 1.08M views in a week in Malaysia, three years after it shipped",
+        share: "A quarter of every template video posted in Malaysia that week",
         blurb:
           "A Shopee-styled desktop: a browser-like window with the product photo framed inside it and an app dock along the bottom, swiping from one shot to the next like a slide show. It shipped in Malaysia under a different name, Geser-Geser, which is Malay for “swipe-swipe”.",
         tags: ["Desktop UI", "Slide show", "Renamed per market"],
@@ -127,6 +134,7 @@ export const template = {
       {
         title: "Bento grid",
         uses: "",
+        share: "",
         blurb:
           "Photos land in a bento-style grid of rounded tiles, with a Shopee logo tile and a vertical hashtag tile built into the layout. It starts on a single photo and opens out into the full grid.",
         tags: ["Grid layout", "Brand tile", "Hashtag"],
@@ -134,6 +142,7 @@ export const template = {
       {
         title: "Shopee.exe",
         uses: "",
+        share: "",
         blurb:
           "A retro desktop window: title bar, menu, Back and Next buttons and a row of thumbnails with film-style names. Stepping through changes the main photo and its colour grade.",
         tags: ["Retro UI", "Colour grades", "Interactive feel"],
