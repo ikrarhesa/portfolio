@@ -198,8 +198,11 @@ function App({ initialPath }: { initialPath?: string }) {
                   900px of viewport height, it — not the grid's min-h — decides where the work section
                   starts. Scaling it with svh keeps it full size on a big display and lets the case
                   studies clear the fold on a short laptop. */}
+              {/* overflow-wrap:anywhere is a safety net, not the normal path. Japanese breaks at phrase
+                  boundaries, and a long katakana phrase like "クリエイティブシステム" offers none, so on a
+                  narrow screen it is wider than the column and would otherwise overflow it. */}
               <h1
-                className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 md:text-[clamp(2.5rem,5.2svh,3.75rem)]"
+                className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 [overflow-wrap:anywhere] md:text-[clamp(2.5rem,5.2svh,3.75rem)]"
                 style={delay(120)}
               >
                 {t.home.hero.headline.before}
@@ -231,7 +234,7 @@ function App({ initialPath }: { initialPath?: string }) {
             </div>
           </div>
 
-          <dl className="rise grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-8 md:grid-cols-2" style={delay(560)}>
+          <dl className="rise grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-6 md:grid-cols-2" style={delay(560)}>
             {PROOF.map((p, i) => (
               <div key={i}>
                 {/* The metric is named before the number, so the figure means something on sight */}
@@ -250,7 +253,7 @@ function App({ initialPath }: { initialPath?: string }) {
         </section>
 
         {/* Work */}
-        <section id="work" className="scroll-mt-20 pt-10 pb-14 md:pt-12 md:pb-20">
+        <section id="work" className="scroll-mt-20 pt-8 pb-14 md:pt-10 md:pb-20">
           <Label>{t.home.work.label}</Label>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">{t.home.work.heading}</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2">

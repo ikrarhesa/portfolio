@@ -3,7 +3,11 @@ import type { Home } from "../en/home";
 export const home: Home = {
   hero: {
     label: "Ikrar Hesa Prasetya · ジャカルタ",
-    headline: { before: "デジタルプロダクトと", emphasis: "クリエイティブシステム", after: "のデザイナー。" },
+    // Reversed against the English so this wraps to two lines, which keeps the work section above the
+    // fold on a short screen. Japanese breaks at phrase boundaries (word-break: auto-phrase), so
+    // "クリエイティブシステム" can never be split: leading with it puts that long phrase on its own
+    // line and the rest on the second. Changing the order of the two halves here will cost a line.
+    headline: { before: "", emphasis: "クリエイティブシステム", after: "とデジタル製品のデザイナー。" },
     intro:
       "人がコミュニケーションし、つくり、販売するための体験とツールをデザインしています。現在はShopeeで、東南アジア全域で数百万人が利用するクリエイティブツールに取り組んでいます。",
     ctaWork: "主な実績を見る",
@@ -12,12 +16,13 @@ export const home: Home = {
   proof: [
     {
       eyebrow: "テンプレート利用の伸び · マレーシア",
-      label: "テンプレートを使って毎週投稿される動画の増加率。3か月で200本から34,000本へ",
+      label: "毎週テンプレートで投稿される動画の増加率。3か月で200本から34,000本へ",
     },
     {
+      // 見出しの「展開した市場」を繰り返さず、市場名そのものを挙げる
       eyebrow: "展開した市場",
       label:
-        "私のデザインが展開される市場（各市場の言語にローカライズ）: インドネシア、マレーシア、タイ、ベトナム、フィリピン、台湾。私の担当はマレーシア。",
+        "インドネシア、マレーシア、タイ、ベトナム、フィリピン、台湾。各言語にローカライズし、担当はマレーシア。",
     },
   ],
   work: { label: "主な実績", heading: "代表的なケーススタディ", viewCase: "ケーススタディを見る" },

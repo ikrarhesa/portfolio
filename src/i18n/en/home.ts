@@ -14,9 +14,11 @@ export const home = {
       label: "increase in videos posted with a template each week, from 200 to 34,000 in three months",
     },
     {
+      // The caption does not repeat the eyebrow: it names the markets rather than restating "markets
+      // my designs ship to", which the eyebrow above it already says.
       eyebrow: "Markets shipped to",
       label:
-        "markets my designs ship to, localized for each: Indonesia, Malaysia, Thailand, Vietnam, the Philippines and Taiwan. I managed Malaysia.",
+        "Indonesia, Malaysia, Thailand, Vietnam, the Philippines and Taiwan, each localized. I managed Malaysia.",
     },
   ],
   work: { label: "Selected work", heading: "Selected case studies", viewCase: "View case study" },
