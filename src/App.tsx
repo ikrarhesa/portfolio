@@ -202,7 +202,7 @@ function App({ initialPath }: { initialPath?: string }) {
                   boundaries, and a long katakana phrase like "クリエイティブシステム" offers none, so on a
                   narrow screen it is wider than the column and would otherwise overflow it. */}
               <h1
-                className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 [overflow-wrap:anywhere] md:text-[clamp(2.5rem,5.2svh,3.75rem)]"
+                className="hero-headline rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 [overflow-wrap:anywhere] md:text-[clamp(2.5rem,5.2svh,3.75rem)]"
                 style={delay(120)}
               >
                 {t.home.hero.headline.before}

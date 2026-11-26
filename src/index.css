@@ -148,6 +148,17 @@ body {
   display: inline-block;
   transition: filter 0.4s ease;
 }
+
+/* Japanese only, below the md breakpoint. Japanese wraps at phrase boundaries, so
+   "クリエイティブシステム" is a single 11-character unit that cannot be split. At the English mobile
+   size that unit is wider than the text column, so it wrapped mid-phrase. Scaling with the viewport
+   width keeps it on one line from a 320px phone upwards, and returns to full size on a wide one.
+   English is untouched, and so is every other h1: this applies to the hero headline only. */
+@media (max-width: 767px) {
+  html:lang(ja) .hero-headline {
+    font-size: clamp(1.5rem, 7.8vw, 2.25rem);
+  }
+}
 @media (hover: hover) and (pointer: fine) {
   .shimmer-text:hover {
     --ink: var(--color-zinc-50);
