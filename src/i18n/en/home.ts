@@ -9,8 +9,12 @@ export const home = {
     ctaContact: "Get in touch",
   },
   proof: [
-    { label: "videos a week posted with a template in Malaysia, up from 200 in three months" },
     {
+      eyebrow: "Template adoption · Malaysia",
+      label: "increase in videos posted with a template each week, from 200 to 34,000 in three months",
+    },
+    {
+      eyebrow: "Markets shipped to",
       label:
         "markets my designs ship to, localized for each: Indonesia, Malaysia, Thailand, Vietnam, the Philippines and Taiwan. I managed Malaysia.",
     },

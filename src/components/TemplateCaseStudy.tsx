@@ -15,9 +15,9 @@ import { fill, useContent, useMissions } from "../i18n";
  */
 
 // Counted up in the "result" cards. The labels and unit suffixes are in the content (template.result.headline).
+// 16,900% is (34,000 - 200) / 200: the growth in weekly template uses over the three months.
 const HEADLINE = [
-  { from: 200, to: 34000 },
-  { from: 0, to: 3 },
+  { from: 0, to: 16900 },
   { from: 0, to: 15000 },
 ];
 
@@ -26,7 +26,7 @@ const GROWTH_VALUES = [200, 7000, 34000];
 
 // The clips behind the three example templates (their names and descriptions are in the content, same order)
 const TEMPLATE_CLIPS = [
-  { id: "six-frames", video: "/template/six-frames.mp4", poster: "/template/six-frames.jpg" },
+  { id: "desktop-album", video: "/template/desktop-album.mp4", poster: "/template/desktop-album.jpg" },
   { id: "bento-grid", video: "/template/bento-grid.mp4", poster: "/template/bento-grid.jpg" },
   { id: "windows-like", video: "/template/windows-like.mp4", poster: "/template/windows-like.jpg" },
 ];
@@ -107,7 +107,7 @@ export default function TemplateCaseStudy({ mission }: { mission: Mission }) {
       </dl>
 
       <Section title={c.result.title} label={c.result.label}>
-        <dl className="grid gap-4 sm:grid-cols-3">
+        <dl className="grid gap-4 sm:grid-cols-2">
           {c.result.headline.map((h, i) => (
             <div key={h.label} className={`${CARD} p-5`}>
               <dt className="text-4xl font-bold tracking-tight text-zinc-50">
@@ -229,6 +229,7 @@ export default function TemplateCaseStudy({ mission }: { mission: Mission }) {
                   {fill(c.work.template, { n: String(i + 1).padStart(2, "0") })}
                 </p>
                 <h3 className="mt-2 text-lg font-semibold tracking-tight text-zinc-50">{item.title}</h3>
+                {item.uses && <p className="mt-2 text-sm font-semibold text-zinc-200">{item.uses}</p>}
                 <p className="mt-2 text-sm leading-relaxed text-zinc-400">{item.blurb}</p>
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {item.tags.map((tag) => (

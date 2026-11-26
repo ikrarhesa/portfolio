@@ -205,9 +205,9 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       ref={rootRef}
       data-paused={!inView}
       className="relative mx-auto"
-      // Width follows the viewport height (phone + controls take roughly 24rem of height plus 2.2 × width,
-      // the screen plus its frame), capped for big screens
-      style={{ width: "clamp(180px, calc((100svh - 23rem) / 2.07), 268px)" }}
+      // Width follows the viewport height: the phone is 2.07 × its width tall, and the controls below it
+      // take roughly 8rem. Tuned against the hero's min-h in App.tsx (62svh) — keep the two in step.
+      style={{ width: "clamp(170px, calc((62svh - 8rem) / 2.07), 240px)" }}
       role="group"
       aria-label={d.group}
     >

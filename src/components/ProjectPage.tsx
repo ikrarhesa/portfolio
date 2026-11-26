@@ -18,13 +18,16 @@ export default function ProjectPage({ mission }: { mission: Mission }) {
   const index = missions.findIndex((m) => m.id === mission.id);
   const next = missions[(index + 1) % missions.length];
 
-  const meta = [
-    [p.meta.role, mission.role],
-    [p.meta.focus, mission.focus],
-    [p.meta.surface, mission.surface],
-    [p.meta.status, mission.status],
-    [p.meta.year, mission.year],
-  ];
+  // Region first so the market this study covers is unmissable. Rows without a value are dropped.
+  const meta = (
+    [
+      [p.meta.role, mission.role],
+      [p.meta.region, mission.region],
+      [p.meta.surface, mission.surface],
+      [p.meta.focus, mission.focus],
+      [p.meta.year, mission.year],
+    ] as [string, string | undefined][]
+  ).filter((row): row is [string, string] => Boolean(row[1]));
 
   return (
     <article className="pt-10 pb-16 md:pt-14">

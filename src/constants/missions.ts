@@ -16,6 +16,7 @@ export const MISSIONS: {
   summary: string;
   role: string;
   focus: string;
+  region?: string; // the market the case study covers; the meta row is dropped when absent
   surface: string;
   status: string;
   year: string;
@@ -50,7 +51,7 @@ export const MISSIONS: {
       year: "2023",
       stack: ["Video templates", "SDK toolkit", "Trend research", "TikTok tools", "CapCut", "Competitor review", "Cross-region work"],
       cover: [
-        { video: "/template/six-frames.mp4", poster: "/template/six-frames.jpg" },
+        { video: "/template/desktop-album.mp4", poster: "/template/desktop-album.jpg" },
         { video: "/template/bento-grid.mp4", poster: "/template/bento-grid.jpg" },
         { video: "/template/windows-like.mp4", poster: "/template/windows-like.jpg" },
       ],
@@ -68,14 +69,15 @@ export const MISSIONS: {
       title: "Localizing Shopee's AR effects for Indonesia",
       summary:
         "Replaced an effects library built for another market with one made for Indonesian users, refreshed it every week, and gave sellers commercial effects with text they can edit, for both Shopee Video and Shopee Live.",
-      role: "Product designer · SDK",
+      role: "Product designer",
       focus: "Localization, content library, commercial tools",
+      region: "Indonesia",
       surface: "AR effects · Shopee Video and Live",
       status: "Shipped",
       year: "2022–present",
       stack: ["AR effects", "Adobe Illustrator", "After Effects", "Shopee Effect (in-house)", "Localization", "Content library", "Cross-region work"],
       cover: [
-        { video: "/ar/ngantuk-ya.mp4", poster: "/ar/ngantuk-ya.jpg" },
+        { video: "/ar/diskaun-untuk-anda.mp4", poster: "/ar/diskaun-untuk-anda.jpg" },
         { video: "/ar/editable-text.mp4", poster: "/ar/editable-text.jpg" },
         { video: "/ar/nod-to-switch.mp4", poster: "/ar/nod-to-switch.jpg" },
       ],
@@ -85,10 +87,9 @@ export const MISSIONS: {
         {
           title: "Context and goal",
           body: [
-            "In 2022, Shopee launched Shopee Video. The effect library at launch was mostly built by the regional team in China, so it spoke to that market and not to Indonesia.",
-            "I joined in September 2022 as the second designer on the Video team. My title was product designer. The work was designing for the SDK, the toolkit behind effects, stickers and templates, and day to day it also included UI and UX.",
-            "The goal was to help sellers make videos and live streams that hold attention, and to give buyers a reason to stop when they see one. AR effects, which Shopee calls magic, were one of the ways to do that.",
-            "The effects were not only for video. In 2024 Shopee Live came to the same toolkit, and most of the effects available for video became available for live as well. Sellers who livestream use them while they sell, and they lean on them most during campaigns such as the double-date sales.",
+            "Shopee Video launched in 2022 with an effect library built largely by the regional team in China. It spoke to that market, not to Indonesia, and in Indonesia almost nobody opened it.",
+            "That mattered commercially. An effect is how a seller turns plain product footage into something a buyer stops scrolling for. A library nobody opens means sellers posting flat video into a feed that rewards attention, so this was a conversion problem wearing a cosmetic disguise.",
+            "I joined in September 2022 as the second designer on the Video team, designing for the SDK: the in-house toolkit behind effects, stickers and templates. I rebuilt the library around what Indonesian sellers actually post, put it on a weekly refresh, and gave sellers effects they could write their own copy into.",
           ],
           visual: {
             type: "timeline",
@@ -103,19 +104,21 @@ export const MISSIONS: {
         },
         {
           title: "The problem",
-          body: ["The library was not localized, and in Indonesia few people used it."],
+          body: [
+            "In Indonesia, about 30 videos a week went out with an effect on them. The library was there; it just wasn't built for the people it was being shown to.",
+          ],
         },
         {
           title: "The constraints",
           body: [
-            "There were four designers, one per region, and I managed Malaysia. Indonesia was shared: all four of us designed for it, and it is the market this case study is about. Most of our designs were pushed to the other markets too, with the copy localized for each one, for example Indonesian copy translated into Thai or Vietnamese. Each market decided what to use, and each regional designer set their own strategy, such as how often to refresh the library and where to place effects. The team was small and had to decide and ship fast.",
-            "When Malaysia came in 2023, its side changed often and never had one fixed owner. Before each planning round I had to find out who was responsible, bring them together and agree the plan again. The constraint was not engineering capacity. It was people and time.",
+            "Indonesia is the market this case study covers, and it was shared: four designers, one per region, all designed for it. Malaysia was the market I owned, and it has its own case study. Designs travelled between markets with the copy localized for each, so an effect had to still read clearly once its words were translated and it had lost the context it was drawn for.",
+            "That set the design brief. An effect could not be a one-off: it had to hold up as part of a system refreshed every week by a small team. So each one had to be fast to produce, readable as a thumbnail in a crowded grid, and legible at a glance by a seller who is mid-stream and not looking for it.",
           ],
           visual: {
             type: "team",
             count: 4,
-            mine: "Me · Malaysia",
-            note: "Four designers, one per region. All four of us designed for Indonesia. I managed Malaysia, where the product owner kept changing.",
+            mine: "Me · 1 of 4 on Indonesia",
+            note: "Four designers, one per region. All four designed for Indonesia, the market this study covers. Malaysia was the one I owned, and it has its own case study.",
           },
         },
       ],
@@ -152,17 +155,22 @@ export const MISSIONS: {
       results: [
         {
           value: "30 → 500",
-          label: "videos a week using AR effects in Indonesia, before and after the library refresh",
+          label: "videos a week published with an effect in Indonesia, before and after the library refresh",
         },
         {
           value: "16×",
-          label: "growth in weekly videos using effects (500 ÷ 30)",
+          label: "more seller video carrying an effect each week, from the same seller base",
+        },
+        {
+          value: "205,952",
+          label:
+            "views in a single week on Seamless, one of the effects I designed. Years later it is still the second most used magic in Indonesia, and Promo Spesial is in the top seven",
         },
       ],
       resultsNote: [
-        "Figures come from Shopee's internal dashboards, Data Studio and DataZoo, which track views, videos posted, completion rate, conversion rate, comments and likes. The numbers here are rounded, and they count videos posted using an effect. They do not capture how sellers use effects on Shopee Live.",
-        "Effects are smaller than templates, because each one is used for something specific and for a short time. A new effect usually got only about 5 to 6 uses in its first two months. Across a library that is refreshed every week, those add up to hundreds of videos a week.",
-        "Most of the same designs were pushed to other markets too, but each region ran its own strategy, so numbers differ by region. I report Indonesia, the region this figure comes from. Malaysia came later, in 2023, and its data for effects is thinner, so I don't report it here.",
+        "The business case was seller adoption, and the effects that won were the ones that removed a step. A seller who wants to go live has to be camera-ready first. The beauty and makeup effects take that away: they open the camera and start selling. That is why those travel to every market and stay at the top of the library, while a novelty effect spikes and fades.",
+        "The library also outlived the surface it was built for. In 2024 most of it became available to Shopee Live, and sellers lean on it hardest during the double-date campaigns, where an offer effect puts the deal on screen while they sell.",
+        "Measured on Shopee's internal dashboards. Figures are rounded and count videos published with an effect in Indonesia; they do not capture Shopee Live usage.",
       ],
       learnings: [
         "Local relevance beats polish. The effects that worked used Indonesian copy and a light touch, not heavy decoration.",
@@ -214,6 +222,7 @@ export type MissionText = Pick<
   | "summary"
   | "role"
   | "focus"
+  | "region"
   | "surface"
   | "status"
   | "year"

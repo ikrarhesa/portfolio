@@ -37,9 +37,11 @@ function shouldPlayIntro() {
   }
 }
 
-// The numbers are the same in every language; the labels come from the content files (home.proof, same order)
+// The numbers are the same in every language; the eyebrow naming each metric and the caption
+// below it come from the content files (home.proof, same order).
+// 16,900% is (34,000 - 200) / 200: the growth in weekly template uses in Malaysia over three months.
 const PROOF: { from?: number; to: number; prefix?: string; suffix: string }[] = [
-  { from: 200, to: 34000, prefix: "", suffix: "" },
+  { to: 16900, suffix: "%" },
   { to: 6, suffix: "" },
 ];
 
@@ -183,9 +185,10 @@ function App({ initialPath }: { initialPath?: string }) {
           <>
         {/* Hero */}
         <section className="pb-14 md:pb-20">
-          {/* One screen tall (minus the 4rem header and a 6.5rem peek), so the stats row below is cut off
-              at the bottom edge on purpose and invites a scroll. */}
-          <div className="grid min-h-[calc(100svh-4rem-6.5rem)] items-center gap-10 py-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
+          {/* Deliberately shorter than one screen: the work comes first, so the stats row and the
+              case studies below it are reachable on the first scroll rather than a screen down.
+              HeroStage sizes the phone against the same height — keep the two in step. */}
+          <div className="grid min-h-[28rem] items-center gap-10 py-8 md:min-h-[calc(62svh-4rem)] lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
             <div>
               <div className="rise" style={delay(0)}>
                 <Label>{t.home.hero.label}</Label>
@@ -226,10 +229,16 @@ function App({ initialPath }: { initialPath?: string }) {
           <dl className="rise grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-8 md:grid-cols-2" style={delay(560)}>
             {PROOF.map((p, i) => (
               <div key={i}>
-                <dt className="text-4xl font-bold tracking-tight text-zinc-50">
-                  <CountUp from={p.from} to={p.to} prefix={p.prefix} suffix={p.suffix} delay={700} />
+                {/* The metric is named before the number, so the figure means something on sight */}
+                <dt className="font-mono text-xs uppercase tracking-widest text-fuchsia-300">
+                  {t.home.proof[i].eyebrow}
                 </dt>
-                <dd className="mt-2 text-sm leading-snug text-zinc-400">{t.home.proof[i].label}</dd>
+                <dd className="mt-3">
+                  <span className="block text-4xl font-bold tracking-tight text-zinc-50">
+                    <CountUp from={p.from} to={p.to} prefix={p.prefix} suffix={p.suffix} delay={700} />
+                  </span>
+                  <span className="mt-2 block text-sm leading-snug text-zinc-400">{t.home.proof[i].label}</span>
+                </dd>
               </div>
             ))}
           </dl>

@@ -2,21 +2,25 @@
 export const template = {
   caseLabel: "Case study · Shipped",
   lede: "Templates let sellers go from zero to a finished video in a few clicks, but in Malaysia hardly anyone used them. I reused what had worked in Indonesia, researched what Malaysian users actually like, and then designed templates to match. Within three months, weekly uses grew from 200 to 34,000.",
+  // No "Status" row: the hero label above already reads "Case study · Shipped".
   meta: [
-    ["Role", "Designer · SDK"],
+    ["Role", "Product designer"],
+    ["Product", "Shopee Video templates"],
     ["Region", "Malaysia"],
-    ["Surface", "Shopee Video templates"],
     ["Year", "2023 · 3 months"],
-    ["Status", "Shipped"],
   ] as [string, string][],
 
   result: {
     title: "The result",
     label: "Headline",
+    // Two cards only: the chart below already carries the 200 → 34K trajectory and the three-month span.
     headline: [
-      { suffix: "", label: "videos posted with a template in a week in Malaysia, up from 200 when the work began" },
-      { suffix: " months", label: "from low adoption to 34K weekly uses" },
-      { suffix: "", label: "weekly uses from one OOTD-themed template alone. The rest followed with thousands each" },
+      { suffix: "%", label: "increase in videos posted with a template each week in Malaysia, from 200 to 34,000" },
+      {
+        suffix: "",
+        label:
+          "weekly uses from the OOTD template once I moved it to the top of the library, where it had been buried. I did not design that one; I changed where it sat",
+      },
     ],
     growthAria: "Weekly template uses in Malaysia",
     growthCaption: "Weekly template uses, Malaysia",
@@ -35,7 +39,7 @@ export const template = {
     label: "Context",
     p1: "Templates sit under the same SDK as effects and stickers. Most of my designs shipped to the other markets too, but each region set its own strategy for the library.",
     p2: "In Malaysia the problem was adoption. The library existed, but very few people were using it: about 200 videos a week were posted with a template.",
-    quote: "Templates only matter if people use them. How do we get sellers to start?",
+    quote: "How might we get a seller to make their first video with a template?",
   },
 
   purpose: {
@@ -97,7 +101,7 @@ export const template = {
       "Looking across TikTok tools, TikTok top content, CapCut and competitors, with input from the Malaysian marketing team, three things kept showing up:",
     trends: ["Fast-paced music", "Minimal elements", "Rapid transitions"],
     outro:
-      "That is the direction I designed toward. The result was clearest in one template: an OOTD-themed one drove around 15K weekly uses by itself, and the rest followed with thousands each.",
+      "That is the direction I designed toward. The clearest result came from a template I did not draw. An OOTD-themed one was already in the library but buried far down the list, so I moved it to the top: it went on to drive around 15K weekly uses by itself. Adoption was not only a supply problem, it was a discovery one. The templates I did design followed with thousands each.",
     libraryAlt:
       "The Template tab in Shopee Video: a OneClip banner, category tabs, and a grid of template covers with the number of photos or videos each needs",
     libraryCaption:
@@ -107,23 +111,29 @@ export const template = {
   work: {
     label: "The work",
     heading: "Templates I designed",
-    intro: "Three examples of templates I designed. They loop while on screen, and a tap pauses or plays.",
+    intro:
+      "Three templates I designed. The same design often shipped under a different name in each market. They loop while on screen, and a tap pauses or plays.",
     template: "Template {n}",
+    // `uses` is the weekly-uses figure shown under each title. Left empty until the real per-template
+    // numbers are available; an empty string renders nothing, so no placeholder reaches the page.
     items: [
       {
-        title: "Six frames of happiness",
+        title: "Desktop Album",
+        uses: "9,990 videos in a week in Malaysia, three years after it shipped",
         blurb:
-          "A six-photo collage that fills a vertical frame, with hand-made stickers (a plaster, a star, a CD) laid over the seams.",
-        tags: ["6 photos", "Collage", "Stickers"],
+          "A Shopee-styled desktop: a browser-like window with the product photo framed inside it and an app dock along the bottom, swiping from one shot to the next like a slide show. It shipped in Malaysia under a different name, Geser-Geser, which is Malay for “swipe-swipe”.",
+        tags: ["Desktop UI", "Slide show", "Renamed per market"],
       },
       {
         title: "Bento grid",
+        uses: "",
         blurb:
           "Photos land in a bento-style grid of rounded tiles, with a Shopee logo tile and a vertical hashtag tile built into the layout. It starts on a single photo and opens out into the full grid.",
         tags: ["Grid layout", "Brand tile", "Hashtag"],
       },
       {
         title: "Shopee.exe",
+        uses: "",
         blurb:
           "A retro desktop window: title bar, menu, Back and Next buttons and a row of thumbnails with film-style names. Stepping through changes the main photo and its colour grade.",
         tags: ["Retro UI", "Colour grades", "Interactive feel"],

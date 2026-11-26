@@ -10,13 +10,13 @@ export const jaArFilters: Record<string, ARFilterText> = {
     purpose: "コマース向け: セラーが自分のオファーを書き込める",
     trigger: "入力した文字（リアルタイム）",
   },
-  "ngantuk-ya": {
-    title: "Ngantuk ya?",
+  "diskaun-untuk-anda": {
+    title: "Diskaun untuk anda",
     blurb:
-      "ちょっとしたチャレンジ。ほかの人があくびをするのを見て、あくびをせずにいられるか？ エフェクトにはあくびをする顔が表示され、口を開けると失敗です。「Ngantuk ya?」はインドネシア語で「眠いの？」という意味です。",
-    tags: ["口を開けるとトリガー", "チャレンジ", "現地語のコピー"],
-    purpose: "現地語のコピーと、シンプルなチャレンジ",
-    trigger: "口を開ける",
+      "マレーシア向けにつくったキャンペーン用エフェクト。撮影中や配信中のセラーの頭の周りに、Shopeeブランドのオファーバッジが浮かびます。オレンジの「Diskaun untuk anda!」（あなたへの割引）と、青の「Penghantaran percuma」（送料無料）。コピーはインドネシア語ではなくマレー語です。翻訳ではなく、その市場に合わせた言い回しを用意しました。",
+    tags: ["コマース向け", "マレー語のコピー", "キャンペーン"],
+    purpose: "コマース向け: 販売中の画面にオファーを表示する",
+    trigger: "顔のトラッキング",
   },
   "nod-to-switch": {
     title: "うなずいて切り替え",

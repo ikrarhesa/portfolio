@@ -27,15 +27,15 @@ export const AR_FILTERS: ARFilter[] = [
     poster: "/ar/editable-text.jpg",
   },
   {
-    id: "ngantuk-ya",
-    title: "Ngantuk ya?",
+    id: "diskaun-untuk-anda",
+    title: "Diskaun untuk anda",
     blurb:
-      "A small challenge: can you watch other people yawn without yawning? The effect shows yawning faces, and if you open your mouth, you fail. “Ngantuk ya?” is Indonesian for “Sleepy, huh?”",
-    tags: ["Mouth-open trigger", "Challenge", "Local copy"],
-    purpose: "Local copy and a simple challenge",
-    trigger: "Open mouth",
-    video: "/ar/ngantuk-ya.mp4",
-    poster: "/ar/ngantuk-ya.jpg",
+      "A campaign effect built for Malaysia. Shopee-branded offer badges float around the seller's head while they film or stream: an orange “Diskaun untuk anda!” and a blue “Penghantaran percuma”. The copy is Malay, not Indonesian, because the market got its own wording rather than a translation.",
+    tags: ["Commercial", "Malay copy", "Campaign"],
+    purpose: "Commercial: put the offer on screen while selling",
+    trigger: "Face tracking",
+    video: "/ar/diskaun-untuk-anda.mp4",
+    poster: "/ar/diskaun-untuk-anda.jpg",
   },
   {
     id: "nod-to-switch",

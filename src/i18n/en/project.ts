@@ -2,13 +2,14 @@
 export const project = {
   caseStudy: "Case study · {status}",
   screenshotAlt: "{title} screenshot {n}",
-  meta: { role: "Role", focus: "Focus", surface: "Surface", status: "Status", year: "Year" },
+  // No "Status": the hero label above already reads "Case study · {status}".
+  meta: { role: "Role", region: "Region", surface: "Product", focus: "Focus", year: "Year" },
   moves: { label: "What I did", heading: "{n} moves", move: "Move {n}" },
   filters: {
     label: "The work",
     heading: "Effects I designed",
     intro:
-      "Three effects from the library: one for selling, two made for local users. Screen recordings, looping while on screen. A tap pauses or plays.",
+      "Three effects from the library: two built for selling, one for everyday use. The middle one shows how a design was re-cut for another market rather than translated. Screen recordings, looping while on screen. A tap pauses or plays.",
     filter: "Filter {n}",
     why: "Why",
     trigger: "Trigger",
