@@ -183,8 +183,9 @@ function App({ initialPath }: { initialPath?: string }) {
           <ProjectPage mission={project} />
         ) : (
           <>
-        {/* Hero */}
-        <section className="pb-14 md:pb-20">
+        {/* Hero. No bottom padding: the work section below supplies the whole gap, so the stats row
+            and the case studies stay on the first screen. */}
+        <section>
           {/* Deliberately shorter than one screen: the work comes first, so the stats row and the
               case studies below it are reachable on the first scroll rather than a screen down.
               HeroStage sizes the phone against the same height — keep the two in step. */}
@@ -245,7 +246,7 @@ function App({ initialPath }: { initialPath?: string }) {
         </section>
 
         {/* Work */}
-        <section id="work" className="scroll-mt-20 py-14 md:py-20">
+        <section id="work" className="scroll-mt-20 pt-12 pb-14 md:pt-14 md:pb-20">
           <Label>{t.home.work.label}</Label>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">{t.home.work.heading}</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2">

@@ -42,7 +42,7 @@ export const template = {
   problem: {
     title: "The problem",
     label: "Context",
-    p1: "Templates sit under the same SDK as effects and stickers. Most of my designs shipped to the other markets too, but each region set its own strategy for the library.",
+    p1: "Templates sit in the same toolkit as effects and stickers. Internally we called it the SDK: the shared set of creative tools built into the Shopee app, which sellers use to make a video without leaving it. Most of my designs shipped to the other markets too, but each region set its own strategy for the library.",
     p2: "In Malaysia the problem was adoption. The library existed, but very few people were using it: about 200 videos a week were posted with a template.",
     quote: "How might we get a seller to make their first video with a template?",
   },
@@ -68,7 +68,7 @@ export const template = {
   role: {
     title: "My role and the team",
     label: "Role",
-    p1: "I was a designer on the SDK, designing templates alongside the other designers. Each of them focused on their own region. For Malaysia I was the one who collaborated with the region and kept its design direction and its part of the SDK toolkit in order.",
+    p1: "I was a designer on that toolkit, making templates alongside the other designers. Each of them focused on their own region. For Malaysia I was the one who collaborated with the region and kept its design direction and its part of the toolkit in order.",
     p2: "Day to day I worked with the Malaysian marketing team and the PM.",
     p3: "The regional team are locals and know the market better than I do. They often had their own perspective and feedback, and when they did, I followed it.",
   },

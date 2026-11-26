@@ -44,12 +44,12 @@ export const MISSIONS: {
       title: "Fixing low template adoption in Malaysia: 200 to 34K weekly uses",
       summary:
         "Template adoption in Malaysia was low. I reused what worked in Indonesia, researched what Malaysian users like, then designed for them. Videos posted with a template each week grew from 200 to 34,000 within three months.",
-      role: "Designer · SDK, Malaysia design direction",
+      role: "Product designer, Malaysia design direction",
       focus: "Template library, adoption, trend research",
       surface: "Video templates · Shopee Video",
       status: "Shipped",
       year: "2023",
-      stack: ["Video templates", "SDK toolkit", "Trend research", "TikTok tools", "CapCut", "Competitor review", "Cross-region work"],
+      stack: ["Video templates", "Creative tools (SDK)", "Trend research", "TikTok tools", "CapCut", "Competitor review", "Cross-region work"],
       cover: [
         { video: "/template/desktop-album.mp4", poster: "/template/desktop-album.jpg" },
         { video: "/template/bento-grid.mp4", poster: "/template/bento-grid.jpg" },
@@ -89,7 +89,7 @@ export const MISSIONS: {
           body: [
             "Shopee Video launched in 2022 with an effect library built largely by the regional team in China. It spoke to that market, not to Indonesia, and in Indonesia almost nobody opened it.",
             "That mattered commercially. An effect is how a seller turns plain product footage into something a buyer stops scrolling for. A library nobody opens means sellers posting flat video into a feed that rewards attention, so this was a conversion problem wearing a cosmetic disguise.",
-            "I joined in September 2022 as the second designer on the Video team, designing for the SDK: the in-house toolkit behind effects, stickers and templates. I rebuilt the library around what Indonesian sellers actually post, put it on a weekly refresh, and gave sellers effects they could write their own copy into.",
+            "I joined in September 2022 as the second designer on the Video team. The work was the SDK, which is what we called the shared set of creative tools built into the Shopee app: the effects, stickers and templates a seller uses to make a video without leaving it. I rebuilt the library around what Indonesian sellers actually post, put it on a weekly refresh, and gave sellers effects they could write their own copy into.",
           ],
           visual: {
             type: "timeline",
