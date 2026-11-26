@@ -189,13 +189,17 @@ function App({ initialPath }: { initialPath?: string }) {
           {/* Deliberately shorter than one screen: the work comes first, so the stats row and the
               case studies below it are reachable on the first scroll rather than a screen down.
               HeroStage sizes the phone against the same height — keep the two in step. */}
-          <div className="grid min-h-[28rem] items-center gap-10 py-8 md:min-h-[calc(62svh-4rem)] lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
+          <div className="grid min-h-[28rem] items-center gap-10 py-6 md:min-h-[calc(62svh-4rem)] lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
             <div>
               <div className="rise" style={delay(0)}>
                 <Label>{t.home.hero.label}</Label>
               </div>
+              {/* Fluid from md up: the headline is the tallest thing in the hero and, below roughly
+                  900px of viewport height, it — not the grid's min-h — decides where the work section
+                  starts. Scaling it with svh keeps it full size on a big display and lets the case
+                  studies clear the fold on a short laptop. */}
               <h1
-                className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 md:text-6xl"
+                className="rise mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-zinc-50 md:text-[clamp(2.5rem,5.2svh,3.75rem)]"
                 style={delay(120)}
               >
                 {t.home.hero.headline.before}
@@ -246,7 +250,7 @@ function App({ initialPath }: { initialPath?: string }) {
         </section>
 
         {/* Work */}
-        <section id="work" className="scroll-mt-20 pt-12 pb-14 md:pt-14 md:pb-20">
+        <section id="work" className="scroll-mt-20 pt-10 pb-14 md:pt-12 md:pb-20">
           <Label>{t.home.work.label}</Label>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">{t.home.work.heading}</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2">
