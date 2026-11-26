@@ -205,11 +205,10 @@ export default function HeroStage({ onPlayInvaders }: { onPlayInvaders?: () => v
       ref={rootRef}
       data-paused={!inView}
       className="relative mx-auto"
-      // Width follows the viewport height: the phone is 2.07 × its width tall, and the controls below it
-      // take roughly 8rem. Tuned against the hero's min-h in App.tsx (62svh) — keep the two in step.
-      // The lower bound is load-bearing: on a short laptop the phone is the tallest thing in the hero,
-      // so this floor, not the min-h, is what decides whether the work section clears the fold.
-      style={{ width: "clamp(150px, calc((62svh - 8rem) / 2.07), 240px)" }}
+      // Sized against the viewport width. This used to track the hero's height, back when the stage sat
+      // in the hero and its height decided where the work section started; in its own section further
+      // down the page there is nothing to fit it into, so it just scales with the column it is given.
+      style={{ width: "clamp(200px, 24vw, 280px)" }}
       role="group"
       aria-label={d.group}
     >

@@ -50,8 +50,12 @@ export const home = {
     linkedin: "LinkedIn",
     cv: "Download CV",
   },
-  /** The interactive AR demo in the hero, and the game entry point beside it */
+  /** The interactive AR demo and the game entry point beside it, in their own section after About */
   demo: {
+    label: "Try it",
+    heading: "The AR, running in your browser",
+    intro:
+      "The effects I designed at Shopee run on a seller's phone. This is the same idea rebuilt for the web: face tracking on your own device, so no video ever leaves this browser. Turn on the camera, or find the ship beside the phone if you would rather play something.",
     group: "Interactive AR template demo",
     filterGroup: "AR filter",
     filters: { gum: "Bubble Gum", laser: "Laser Eyes" },

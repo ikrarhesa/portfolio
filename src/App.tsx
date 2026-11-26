@@ -72,6 +72,9 @@ function App({ initialPath }: { initialPath?: string }) {
   const { lang } = useLang();
   const t = useContent();
   const missions = useMissions();
+  // The first mission leads the page: it sits beside the headline, where the AR demo used to be, so the
+  // top of the page is work. The rest fill the grid below, which is why nothing is shown twice.
+  const [featuredMission, ...otherMissions] = missions;
   const project = missions.find((m) => m.id === getProjectId(path)) ?? null;
   const projectId = project?.id ?? null;
 
@@ -187,8 +190,7 @@ function App({ initialPath }: { initialPath?: string }) {
             and the case studies stay on the first screen. */}
         <section>
           {/* Deliberately shorter than one screen: the work comes first, so the stats row and the
-              case studies below it are reachable on the first scroll rather than a screen down.
-              HeroStage sizes the phone against the same height — keep the two in step. */}
+              case studies below it are reachable on the first scroll rather than a screen down. */}
           <div className="grid min-h-[28rem] items-center gap-10 py-6 md:min-h-[calc(62svh-4rem)] lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
             <div>
               <div className="rise" style={delay(0)}>
@@ -229,8 +231,9 @@ function App({ initialPath }: { initialPath?: string }) {
               </div>
             </div>
 
+            {/* The strongest case study, not a decoration: the first thing beside the headline is work */}
             <div className="rise" style={delay(300)}>
-              <HeroStage onPlayInvaders={() => setIsSpaceInvaderModalOpen(true)} />
+              <MissionCard mission={featuredMission} featured={false} />
             </div>
           </div>
 
@@ -256,9 +259,10 @@ function App({ initialPath }: { initialPath?: string }) {
         <section id="work" className="scroll-mt-20 pt-8 pb-14 md:pt-10 md:pb-20">
           <Label>{t.home.work.label}</Label>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">{t.home.work.heading}</h2>
+          {/* The first mission is already up in the hero, so this grid holds the rest */}
           <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {missions.map((m, i) => (
-              <MissionCard key={m.id} mission={m} featured={i === 0} />
+            {otherMissions.map((m) => (
+              <MissionCard key={m.id} mission={m} featured={false} />
             ))}
           </div>
         </section>
@@ -306,6 +310,22 @@ function App({ initialPath }: { initialPath?: string }) {
                 </p>
                 <p>{t.home.about.p4}</p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* The AR demo and the game. Deliberately after the work and the About: it is the most
+            eye-catching thing on the page, and leading with it buried the case studies. */}
+        <section id="play" className="scroll-mt-20 border-t border-white/10 py-14 md:py-20">
+          <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-14">
+            <div>
+              <Label>{t.home.demo.label}</Label>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50">{t.home.demo.heading}</h2>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-300">{t.home.demo.intro}</p>
+            </div>
+            {/* Right padding leaves room for the HoloShip, which sits outside the stage's right edge */}
+            <div className="justify-self-center pr-12 sm:pr-16">
+              <HeroStage onPlayInvaders={() => setIsSpaceInvaderModalOpen(true)} />
             </div>
           </div>
         </section>
